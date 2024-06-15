@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Serialize", "MavLin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Serialize.Tests", "MavLink.Serialize.Tests\MavLink.Serialize.Tests.csproj", "{2E9C75B7-6941-48E3-8B28-783CE988FF5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Serialize.Benchmark", "MavLink.Serialize.Benchmark\MavLink.Serialize.Benchmark.csproj", "{D1364CC6-DE65-4FD5-8C9B-5F602924AE45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{2E9C75B7-6941-48E3-8B28-783CE988FF5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E9C75B7-6941-48E3-8B28-783CE988FF5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E9C75B7-6941-48E3-8B28-783CE988FF5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1364CC6-DE65-4FD5-8C9B-5F602924AE45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1364CC6-DE65-4FD5-8C9B-5F602924AE45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1364CC6-DE65-4FD5-8C9B-5F602924AE45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1364CC6-DE65-4FD5-8C9B-5F602924AE45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
