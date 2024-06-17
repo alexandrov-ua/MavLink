@@ -1,6 +1,7 @@
+using MavLink.Serialize.Dialects;
 using MavLink.Serialize.Messages;
 
-namespace MavLink.Serialize.Dialects.Test;
+namespace MavLink.Serialize.Tests.Dialects;
 
 public class TestDialect : IDialect
 {

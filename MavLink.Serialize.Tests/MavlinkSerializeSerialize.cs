@@ -1,6 +1,6 @@
 using FluentAssertions;
 using MavLink.Serialize.Dialects;
-using MavLink.Serialize.Dialects.Test;
+using MavLink.Serialize.Tests.Dialects;
 
 namespace MavLink.Serialize.Tests;
 
