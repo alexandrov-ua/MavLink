@@ -4,7 +4,7 @@ public static class ChecksumHelper
 {
     const int X25InitChecksum = 0xffff;
 
-    private static ushort Accumulate(byte b, ushort crc)
+    public static ushort Accumulate(byte b, ushort crc)
     {
         unchecked
         {
@@ -14,6 +14,22 @@ public static class ChecksumHelper
         }
     }
 
+    public static ushort Accumulate(ReadOnlySpan<char> buffer, ushort crc)
+    {
+        if (buffer.Length < 1)
+        {
+            return 0xffff;
+        }
+        ushort crcTmp = crc;
+
+        for (int i = 0; i < buffer.Length; i++)
+        {
+            crcTmp = Accumulate((byte)buffer[i], crcTmp);
+        }
+       
+        return (crcTmp);
+    }
+    
     public static ushort Calculate(ReadOnlySpan<byte> buffer, byte crcExtra)
     {
         if (buffer.Length < 1)
@@ -22,7 +38,7 @@ public static class ChecksumHelper
         }
         ushort crcTmp = X25InitChecksum;
 
-        for (int i = 1; i < buffer.Length; i++)
+        for (int i = 0; i < buffer.Length; i++)
         {
             crcTmp = Accumulate(buffer[i], crcTmp);
         }
@@ -30,5 +46,5 @@ public static class ChecksumHelper
         crcTmp = Accumulate(crcExtra, crcTmp); 
         return (crcTmp);
     }
-
+    
 }

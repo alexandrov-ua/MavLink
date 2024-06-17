@@ -31,6 +31,6 @@ internal class SyntaxReceiver : ISyntaxContextReceiver
     } 
 }
 
-internal record class ClassNodeInfo(string DisplayName, string NameSpace, string FilePath)
+public record class ClassNodeInfo(string DisplayName, string NameSpace, string FilePath)
 {
 }

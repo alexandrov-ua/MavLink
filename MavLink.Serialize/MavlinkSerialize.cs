@@ -29,7 +29,7 @@ public static class MavlinkSerialize
 
         var result = dialect.CreatePocket(messageId, magic == 0xFD, sequenceNumber, systemId, componentId,
             buffer.Slice(10, length));
-        var actualChecksum = ChecksumHelper.Calculate(buffer.Slice(0, 10 + length), result.GetChecksumExtra()); 
+        var actualChecksum = ChecksumHelper.Calculate(buffer.Slice(1, 10 + length - 1), result.GetChecksumExtra());
 
         if (checksum != actualChecksum)
         {
@@ -45,7 +45,7 @@ public static class MavlinkSerialize
         var payload = span.Slice(10);
         pocket.Payload.Serialize(payload);
         var length = payload.Length;
-        for (; length > 0 && payload[length-1] == 0; length--)
+        for (; length > 0 && payload[length - 1] == 0; length--)
         {
         }
 
@@ -53,7 +53,7 @@ public static class MavlinkSerialize
 
         BitConverterHelper.Write<byte>(0xFD, ref header);
         BitConverterHelper.Write<byte>((byte) length, ref header);
-        BitConverterHelper.Write<byte>((byte) 0, ref header);//TODO: add 
+        BitConverterHelper.Write<byte>((byte) 0, ref header); //TODO: add 
         BitConverterHelper.Write<byte>((byte) 0, ref header);
         BitConverterHelper.Write(pocket.SequenceNumber, ref header);
         BitConverterHelper.Write(pocket.SystemId, ref header);
@@ -63,10 +63,9 @@ public static class MavlinkSerialize
             BitConverterHelper.Write(b, ref header);
         }
 
-        var actualChecksum = ChecksumHelper.Calculate(span.Slice(0, 10 + length),
+        var actualChecksum = ChecksumHelper.Calculate(span.Slice(1, 10 + length - 1),
             pocket.GetChecksumExtra());
         bytesWritten = 10 + length + 2;
         BitConverterHelper.Write(actualChecksum, ref crc);
     }
 }
-

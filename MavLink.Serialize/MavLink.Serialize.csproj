@@ -15,5 +15,10 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Scriban" Version="5.10.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="Generator/Templates/**/*.scriban" />
+        <EmbeddedResource Include="Generator/Templates/**/*.scriban" />
     </ItemGroup>
 </Project>

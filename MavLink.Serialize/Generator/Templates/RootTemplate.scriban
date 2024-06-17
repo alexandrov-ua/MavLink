@@ -1,0 +1,117 @@
+using MavLink.Serialize;
+using MavLink.Serialize.Dialects;
+using MavLink.Serialize.Messages;
+
+namespace {{ Namespace }};
+
+public class {{ ClassName }} : IDialect
+{
+    public static IDialect Default { get; } = new {{ ClassName }}();
+
+    public IPocket<IPayload> CreatePocket(uint messageId, bool isMavlinkV2, byte sequenceNumber,
+        byte systemId, byte componentId, ReadOnlySpan<byte> payload)
+    {
+        return messageId switch
+        {
+            {{~ for message in Messages ~}}
+            {{ message.Id }} => new {{ to_pascal_case message.Name }}Pocket(isMavlinkV2, sequenceNumber, systemId, componentId, {{ to_pascal_case message.Name }}Payload.Deserialize(payload)),
+            {{~ end ~}}
+            _ => throw new NotImplementedException()
+        };
+    }
+}
+
+#region Enums
+
+{{~ for enum in Enums ~}}
+/// <summary>
+/// {{ enum.Description }}
+/// </summary>
+{{ if enum.IsBitmask }}
+[Flags]
+{{ end -}}
+public enum {{ to_pascal_case enum.Name }}
+{
+    {{~ for item in enum.Items ~}}
+    /// <summary>
+    /// {{ item.Description }}
+    /// </summary>
+    {{ item.Name }} = {{ item.Index }},
+    {{~ end ~}}
+}
+{{~ end ~}}
+
+#endregion
+
+#region Messages
+
+{{~ for message in Messages ~}}
+{{ messageName = to_pascal_case message.Name }}
+public class {{ messageName }}Pocket : Pocket<{{ messageName }}Payload>
+{
+    public {{ messageName }}Pocket(bool isMavlink2, byte sequenceNumber, byte systemId, byte componentId,
+        {{ messageName }}Payload payload) : base(isMavlink2, sequenceNumber, systemId, componentId, payload)
+    {
+    }
+
+    public override uint MessageId => {{ message.Id }};
+    public override string MessageName => "{{ message.Name }}";
+    public override int GetMaxByteSize() => Payload.GetMaxByteSize() + 12;
+
+    public override byte GetChecksumExtra() => {{ message.ChecksumExtra }};
+}
+
+public class {{ messageName }}Payload : IPayload<{{ messageName }}Payload>, IPayload
+{
+    {{~ for item in message.Items ~}}
+    /// <summary>
+    /// {{ item.Description }}
+    /// </summary>
+    {{~ if item.Type.IsEnum ~}}
+    public {{ to_pascal_case item.Type.Enum }} {{ to_pascal_case item.Name }} { get; private set; }
+    {{~ else if item.Type.IsArray ~}}
+    public {{ item.Type.CsType }}[] {{ to_pascal_case item.Name }} { get; private set; } = new {{ item.Type.CsType }}[{{ item.Type.ArrayLength }}];
+    {{~ else ~}}
+    public {{ item.Type.CsType }} {{ to_pascal_case item.Name }} { get; private set; }
+    {{~ end ~}}
+    {{~ end ~}}
+
+    public static {{ messageName }}Payload Deserialize(ReadOnlySpan<byte> span)
+    {
+        var payload = new {{ messageName }}Payload();
+        {{~ for item in message.Items ~}}
+        {{~ if item.Type.IsEnum ~}}
+        payload.{{ to_pascal_case item.Name }} = ({{ to_pascal_case item.Type.Enum }})BitConverterHelper.Read<{{ item.Type.CsType }}>(ref span);
+        {{~ else if item.Type.IsArray ~}}
+        BitConverterHelper.ReadArray<{{ item.Type.CsType }}>(payload.{{ to_pascal_case item.Name }}, ref span);
+        {{~ else ~}}
+        payload.{{ to_pascal_case item.Name }} = BitConverterHelper.Read<{{ item.Type.CsType }}>(ref span);
+        {{~ end ~}}
+        {{~ end ~}}
+        return payload;
+    }
+
+    public static void Serialize({{ messageName }}Payload payload, Span<byte> span)
+    {
+        payload.Serialize(span);
+    }
+
+    public void Serialize(Span<byte> span)
+    {
+        {{~ for item in message.Items ~}}
+        {{~ if item.Type.IsEnum ~}}
+        BitConverterHelper.Write(({{ item.Type.CsType }}){{ to_pascal_case item.Name}}, ref span);
+        {{~ else if item.Type.IsArray ~}}
+        BitConverterHelper.WriteArray({{ to_pascal_case item.Name}}, ref span);
+        {{~ else ~}}
+        BitConverterHelper.Write({{ to_pascal_case item.Name}}, ref span);
+        {{~ end ~}}
+        {{~ end ~}}
+    }
+
+    public int GetMaxByteSize() => {{ message.Size }};
+}
+
+{{~ end ~}}
+
+#endregion

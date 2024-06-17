@@ -28,7 +28,7 @@ public static class BitConverterHelper
 
     public static void ReadArray<T>(T[] array, ref ReadOnlySpan<byte> span) where T : struct
     {
-        ArgumentNullException.ThrowIfNull(array);
+        ArgumentNullException.ThrowIfNull(array);//TODO: use span.CopyTo and MemoryMarshal.Cast<>
         
         for (int i = 0; i < array.Length; i++)
         {
@@ -38,7 +38,7 @@ public static class BitConverterHelper
     
     public static void WriteArray<T>(T[] array, ref Span<byte> span) where T : struct
     {
-        ArgumentNullException.ThrowIfNull(array);
+        ArgumentNullException.ThrowIfNull(array);//TODO: use span.CopyTo and MemoryMarshal.Cast<>
         
         for (int i = 0; i < array.Length; i++)
         {
