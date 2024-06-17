@@ -1,6 +1,6 @@
 using MavLink.Serialize.Messages;
 
-namespace MavLink.Serialize.Dialects.Test;
+namespace MavLink.Serialize.Dialects;
 
 public interface IDialect
 {

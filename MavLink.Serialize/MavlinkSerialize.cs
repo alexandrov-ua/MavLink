@@ -1,3 +1,4 @@
+using MavLink.Serialize.Dialects;
 using MavLink.Serialize.Dialects.Test;
 using MavLink.Serialize.Messages;
 
