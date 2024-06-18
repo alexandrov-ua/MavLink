@@ -1,10 +1,11 @@
+using System;
 using MavLink.Serialize;
 using MavLink.Serialize.Dialects;
 using MavLink.Serialize.Messages;
 
 namespace {{ Namespace }};
 
-public class {{ ClassName }} : IDialect
+public partial class {{ ClassName }} : IDialect
 {
     public static IDialect Default { get; } = new {{ ClassName }}();
 
@@ -25,7 +26,7 @@ public class {{ ClassName }} : IDialect
 
 {{~ for enum in Enums ~}}
 /// <summary>
-/// {{ enum.Description }}
+/// {{ string.strip_newlines enum.Description }}
 /// </summary>
 {{ if enum.IsBitmask }}
 [Flags]
@@ -34,7 +35,7 @@ public enum {{ to_pascal_case enum.Name }}
 {
     {{~ for item in enum.Items ~}}
     /// <summary>
-    /// {{ item.Description }}
+    /// {{ string.strip_newlines item.Description }}
     /// </summary>
     {{ item.Name }} = {{ item.Index }},
     {{~ end ~}}
@@ -65,7 +66,7 @@ public class {{ messageName }}Payload : IPayload<{{ messageName }}Payload>, IPay
 {
     {{~ for item in message.Items ~}}
     /// <summary>
-    /// {{ item.Description }}
+    /// {{ string.strip_newlines item.Description }}
     /// </summary>
     {{~ if item.Type.IsEnum ~}}
     public {{ to_pascal_case item.Type.Enum }} {{ to_pascal_case item.Name }} { get; private set; }

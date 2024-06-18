@@ -1,7 +1,6 @@
 using System.Xml.Linq;
-using Scriban.Parsing;
 
-namespace MavLink.Serialize;
+namespace MavLink.Serialize.Generator;
 
 public static class DialectXmlParser
 {
@@ -30,28 +29,29 @@ public static class DialectXmlParser
             mavlink.Element("messages")!
                 .Elements("message")
                 .Select(t => new MessageDefinition(
-                    Name: t.Attribute("name")?.Value ?? "",
-                    Id: int.Parse(t.Attribute("id")?.Value ?? "0"),
-                    Description: t.Element("description")?.Value ?? "",
+                    Name: t.Attribute("name")?.Value!,
+                    Id: int.Parse(t.Attribute("id")?.Value!),
+                    Description: t.Element("description")?.Value,
                     ExtensionIndex: t.Descendants()
-                        .Select((val, i) => (val, i))
-                        .Where(tup => tup.val.Name.ToString() == "extensions")
-                        .Select(tup => tup.i - 1)
-                        .FirstOrDefault(),
+                        .Select((val, i) => new { Value = val, Index = i })
+                        .FirstOrDefault(o => o.Value.Name.ToString() == "extensions")?.Index,
                     Items: t.Elements("field")
                         .Select(q => new MessageItemDefinition(
-                            Name: q.Attribute("name")?.Value ?? "",
-                            Type: q.Attribute("type")?.Value ?? "",
-                            Enum: q.Attribute("enum")?.Value ?? "",
-                            Display: q.Attribute("display")?.Value ?? ""
+                            Name: q.Attribute("name")?.Value!,
+                            Type: q.Attribute("type")?.Value!,
+                            Enum: q.Attribute("enum")?.Value,
+                            Display: q.Attribute("display")?.Value
                         )).ToList()
                 )).ToList();
         
-        return new RootDefinition(version, enumDefinitions, messagesDefinitions);
+        var includes = mavlink.Elements("include")
+            .Select(t => t.Value).ToList();
+        
+        return new RootDefinition(version, enumDefinitions, messagesDefinitions, includes);
     }
 }
 
-public record RootDefinition(string? Version, List<EnumDefinition> Enums, List<MessageDefinition> Messages)
+public record RootDefinition(string? Version, List<EnumDefinition> Enums, List<MessageDefinition> Messages, List<string> Includes)
 {
 }
 
@@ -66,12 +66,12 @@ public record class EnumItemDefinition(int Index, string Name, string Descriptio
 public record MessageDefinition(
     string Name,
     int Id,
-    string Description,
+    string? Description,
     List<MessageItemDefinition> Items,
     int? ExtensionIndex)
 {
 }
 
-public record MessageItemDefinition(string Type, string Name, string Enum, string Display)
+public record MessageItemDefinition(string Type, string Name, string? Enum, string? Display)
 {
 }

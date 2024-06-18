@@ -1,14 +1,9 @@
-using System.Diagnostics;
-using System.Reflection;
 using FluentAssertions;
-using MavLink.Serialize.Generator.Tests;
-using MavLink.Serialize.Generator;
+using MavLink.Serialize.Generator.Tests.Tools;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Xunit.Abstractions;
 
-namespace MavLink.DialectGenerator;
+namespace MavLink.Serialize.Generator.Tests;
 
 public class DialectGeneratorTest
 {
@@ -80,6 +75,27 @@ public class DialectGeneratorTest
             """);
 
         diagnostics.Should().Contain(t => t.Id == "CS1519");
+        _testOutputHelper.WriteLine(output);
+    }
+    
+    [Fact]
+    public void Negative3()
+    {
+        var (output, diagnostics) = _generatorTestHelper.GetGeneratedOutput(
+            """
+            using MavLink.Serialize.Dialects;
+
+            namespace MavLink.Tests;
+
+
+            [Dialect("fkdjgdfkjghk.xml")]
+            public partial class MinimalDialect
+            {
+                sdfsdfdssd
+            }
+            """);
+
+        diagnostics.Should().Contain(t => t.Id == "mavlink02");
         _testOutputHelper.WriteLine(output);
     }
 }

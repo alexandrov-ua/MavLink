@@ -17,20 +17,24 @@ internal class SyntaxReceiver : ISyntaxContextReceiver
                 .Any(al => al.Attributes
                     .Any(a => a.Name.ToString() == "Dialect")))
         {
+            
             var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
             var attributeData = classSymbol?.GetAttributes()
                 .FirstOrDefault(ad => ad.AttributeClass?.ToDisplayString() == typeof(DialectAttribute).FullName);
             var filePath = attributeData?.ConstructorArguments.FirstOrDefault().Value as string;
+            var sourceFilePath = context.SemanticModel.SyntaxTree.FilePath;
             Roots.Add(new ClassNodeInfo(
                 classSymbol?.Name ?? "",
                 classSymbol?.ContainingNamespace?.ToString() ?? "",
-                filePath ?? ""
+                filePath ?? "",
+                sourceFilePath,
+                classSymbol
                 ));
 
         }
     } 
 }
 
-public record class ClassNodeInfo(string DisplayName, string NameSpace, string FilePath)
+public record class ClassNodeInfo(string DisplayName, string NameSpace, string FilePath, string SourceFilePath, ISymbol Symbol)
 {
 }
