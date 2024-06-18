@@ -69,6 +69,27 @@ public class TemplatesTest
                         new EnumItemRenderModel(2, "MAV_MODE_FLAG_TEST_ENABLED", "Reserved for future use"),
                         new EnumItemRenderModel(4, "MAV_MODE_FLAG_AUTO_ENABLED", "Reserved for future use"),
                     }),
+            },
+            new List<string>());
+
+        var text = TemplateHelper.RenderTemplate(model);
+
+        
+        _testOutputHelper.WriteLine(text);
+    }
+    
+    [Fact]
+    public void Smoke2()
+    {
+        var model = new RootRenderModel(
+            "My.Test",
+            "MyDialect",
+            new List<MessageRenderModel>(),
+            new List<EnumRenderModel>(),
+            new List<string>()
+            {
+                "standard.xml",
+                "minimal.xml"
             });
 
         var text = TemplateHelper.RenderTemplate(model);

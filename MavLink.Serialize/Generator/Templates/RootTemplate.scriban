@@ -7,9 +7,27 @@ namespace {{ Namespace }};
 
 public partial class {{ ClassName }} : IDialect
 {
-    public static IDialect Default { get; } = new {{ ClassName }}();
+    {{~ if AnyIncludes ~}}
+    public static IDialect Create({{- IncludesParameters -}})
+    {
+        var list = new List<IDialect>();
+        {{~ for include in Includes ~}}
+        list.Add({{- include | string.replace "." "" -}});
+        {{~ end ~}}
+        return new {{ ClassName }}(new CompositeDialect(list));
+    }
+    
+    public {{ ClassName }}(IDialect include)
+    {
+        _include = include;
+    }
+    
+    private IDialect _include;
+    {{~ else ~}}    
+    public static IDialect Create() => new {{ ClassName }}();
+    {{~ end ~}}
 
-    public IPocket<IPayload> CreatePocket(uint messageId, bool isMavlinkV2, byte sequenceNumber,
+    public IPocket<IPayload>? CreatePocket(uint messageId, bool isMavlinkV2, byte sequenceNumber,
         byte systemId, byte componentId, ReadOnlySpan<byte> payload)
     {
         return messageId switch
@@ -17,7 +35,11 @@ public partial class {{ ClassName }} : IDialect
             {{~ for message in Messages ~}}
             {{ message.Id }} => new {{ to_pascal_case message.Name }}Pocket(isMavlinkV2, sequenceNumber, systemId, componentId, {{ to_pascal_case message.Name }}Payload.Deserialize(payload)),
             {{~ end ~}}
-            _ => throw new NotImplementedException()
+            {{~ if AnyIncludes ~}}
+            _ => _include.CreatePocket(messageId, isMavlinkV2, sequenceNumber, systemId, componentId, payload),
+            {{~ else ~}}
+            _ => null
+            {{~ end ~}}
         };
     }
 }
@@ -31,7 +53,7 @@ public partial class {{ ClassName }} : IDialect
 {{ if enum.IsBitmask }}
 [Flags]
 {{ end -}}
-public enum {{ to_pascal_case enum.Name }}
+public enum {{ to_pascal_case enum.Name }} : uint
 {
     {{~ for item in enum.Items ~}}
     /// <summary>

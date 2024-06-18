@@ -7,7 +7,7 @@ public class TestDialect : IDialect
 {
     public static IDialect Default { get; } = new TestDialect();
 
-    public IPocket<IPayload> CreatePocket(uint messageId, bool isMavlinkV2, byte sequenceNumber,
+    public IPocket<IPayload>? CreatePocket(uint messageId, bool isMavlinkV2, byte sequenceNumber,
         byte systemId, byte componentId, ReadOnlySpan<byte> payload)
     {
         return messageId switch
@@ -22,7 +22,7 @@ public class TestDialect : IDialect
                 AttitudePayload.Deserialize(payload)),
             110 => new FileTransferProtocolPocket(isMavlinkV2, sequenceNumber, systemId, componentId,
                 FileTransferProtocolPayload.Deserialize(payload)),
-            _ => throw new NotImplementedException()
+            _ => null
         };
     }
 }

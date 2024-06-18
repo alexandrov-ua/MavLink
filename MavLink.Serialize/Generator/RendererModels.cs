@@ -4,8 +4,11 @@ public record RootRenderModel(
     string Namespace,
     string ClassName,
     List<MessageRenderModel> Messages,
-    List<EnumRenderModel> Enums)
+    List<EnumRenderModel> Enums,
+    List<string> Includes)
 {
+    public bool AnyIncludes => Includes.Any();
+    public string IncludesParameters => string.Join(", ", Includes.Select(t => $"IDialect {t.Replace(".","")}"));
    
     public static RootRenderModel CreateFromDefinition(RootDefinition rootDefinition, ClassNodeInfo classNodeInfo)
     {
@@ -13,7 +16,8 @@ public record RootRenderModel(
             classNodeInfo.NameSpace,
             classNodeInfo.DisplayName,
             rootDefinition.Messages.Select(t => MessageRenderModel.CreateFromDefinition(t)).ToList(),
-            rootDefinition.Enums.Select(t => EnumRenderModel.CreateFromDefinition(t)).ToList()
+            rootDefinition.Enums.Select(t => EnumRenderModel.CreateFromDefinition(t)).ToList(),
+            rootDefinition.Includes
         );
     }
 }
@@ -103,11 +107,18 @@ public record TypeRenderModel(string OriginalType, string CsType, int Size, byte
     {
         return type switch
         {
-            "uint8_t" => new TypeRenderModel(type, "byte", 1, arrayLanght, @enum),
-            "uint32_t" => new TypeRenderModel(type, "uint", 4, arrayLanght, @enum),
-            "uint16_t" => new TypeRenderModel(type, "ushort", 2, arrayLanght, @enum),
-            "int16_t" => new TypeRenderModel(type, "short", 2, arrayLanght, @enum),
+            "char" => new TypeRenderModel(type, "char", 2, arrayLanght, @enum),
+            "double" => new TypeRenderModel(type, "double", 4, arrayLanght, @enum),
+            "float" => new TypeRenderModel(type, "float", 8, arrayLanght, @enum),
             "int8_t" => new TypeRenderModel(type, "sbyte", 1, arrayLanght, @enum),
+            "int16_t" => new TypeRenderModel(type, "short", 2, arrayLanght, @enum),
+            "int32_t" => new TypeRenderModel(type, "int", 4, arrayLanght, @enum),
+            "int64_t" => new TypeRenderModel(type, "long", 8, arrayLanght, @enum),
+            "uint8_t" => new TypeRenderModel(type, "byte", 1, arrayLanght, @enum),
+            "uint16_t" => new TypeRenderModel(type, "ushort", 2, arrayLanght, @enum),
+            "uint32_t" => new TypeRenderModel(type, "uint", 4, arrayLanght, @enum),
+            "uint64_t" => new TypeRenderModel(type, "ulong", 8, arrayLanght, @enum),
+
             _ => throw new NotImplementedException()
         };
     }
@@ -122,6 +133,6 @@ public record class EnumRenderModel(string Name, string Description, bool IsBitm
     }
 }
 
-public record class EnumItemRenderModel(int Index, string Name, string Description)
+public record class EnumItemRenderModel(uint Index, string Name, string Description)
 {
 }

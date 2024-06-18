@@ -29,6 +29,8 @@ public static class MavlinkSerialize
 
         var result = dialect.CreatePocket(messageId, magic == 0xFD, sequenceNumber, systemId, componentId,
             buffer.Slice(10, length));
+        if (result == null)
+            throw new Exception("unknown message id");
         var actualChecksum = ChecksumHelper.Calculate(buffer.Slice(1, 10 + length - 1), result.GetChecksumExtra());
 
         if (checksum != actualChecksum)

@@ -39,6 +39,27 @@ public class DialectGeneratorTest
     }
     
     [Fact]
+    public void Positive1()
+    {
+        var (output, diagnostics) = _generatorTestHelper.GetGeneratedOutput(
+            """
+            using MavLink.Serialize.Dialects;
+
+            namespace MavLink.Tests;
+
+
+            [Dialect("common.xml")]
+            public partial class MinimalDialect
+            {
+                
+            }
+            """);
+
+        diagnostics.Where(t=>t.Severity > DiagnosticSeverity.Warning).Should().BeEmpty();
+        _testOutputHelper.WriteLine(output);
+    }
+    
+    [Fact]
     public void Negative()
     {
         var (output, diagnostics) = _generatorTestHelper.GetGeneratedOutput(

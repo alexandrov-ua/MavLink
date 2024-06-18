@@ -22,7 +22,7 @@ public static class DialectXmlParser
                         .Select(q => new EnumItemDefinition(
                             Name: q.Attribute("name")?.Value ?? "",
                             Description: q.Element("description")?.Value ?? "",
-                            Index: int.Parse(q.Attribute("value")?.Value ?? "0")
+                            Index: uint.Parse(q.Attribute("value")?.Value ?? "0")
                         )).ToList()
                 )).ToList();
         var messagesDefinitions =
@@ -59,7 +59,7 @@ public record class EnumDefinition(string Name, string Description, bool IsBitma
 {
 }
 
-public record class EnumItemDefinition(int Index, string Name, string Description)
+public record class EnumItemDefinition(uint Index, string Name, string Description)
 {
 }
 
