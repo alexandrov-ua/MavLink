@@ -163,17 +163,18 @@ public class MavlinkSerializeDeserialize
         concretePocket.Payload.TargetComponent.Should().Be(mavgenConcretePocket.target_component);
         concretePocket.Payload.TargetSystem.Should().Be(mavgenConcretePocket.target_system);
         concretePocket.Payload.TargetNetwork.Should().Be(mavgenConcretePocket.target_network);
-        
+
         Assert.Equal(concretePocket.Payload.Payload, mavgenConcretePocket.payload);
     }
-    
-    
+
+
     [Fact]
     public void FileTransferProtocol2()
     {
         var data = new byte[]
         {
-            0xfd, 0x09, 0x00, 0x00, 0x48, 0x01, 0x01, 0x6e, 0x00, 0x00, 0x00, 0xff, 0xbe, 0x46, 0x00, 0x00, 0x80, 0x00, 0x02, 0x1b, 0x86,
+            0xfd, 0x09, 0x00, 0x00, 0x48, 0x01, 0x01, 0x6e, 0x00, 0x00, 0x00, 0xff, 0xbe, 0x46, 0x00, 0x00, 0x80, 0x00,
+            0x02, 0x1b, 0x86,
         };
 
         var pocket = MavlinkSerialize.Deserialize(data, TestDialect.Default);
@@ -190,7 +191,36 @@ public class MavlinkSerializeDeserialize
         concretePocket.Payload.TargetComponent.Should().Be(mavgenConcretePocket.target_component);
         concretePocket.Payload.TargetSystem.Should().Be(mavgenConcretePocket.target_system);
         concretePocket.Payload.TargetNetwork.Should().Be(mavgenConcretePocket.target_network);
-        
+
         Assert.Equal(concretePocket.Payload.Payload, mavgenConcretePocket.payload);
+    }
+
+    [Fact]
+    public void TerrainData()
+    {
+        var data = new byte[]
+        {
+            0xFD, 0x27, 0x00, 0x00, 0x7B, 0xFF, 0x7B, 0x86, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x17, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x03, 0x00, 0x04, 0x00, 0x05, 0x00, 0x06, 0x00, 0x07, 0x00, 0x08, 0x00,
+            0x09, 0x00, 0x0A, 0x00, 0x0B, 0x00, 0x0C, 0x00, 0x0D, 0x00, 0x0E, 0x00, 0x0F, 0x54, 0x53
+        };
+
+        var pocket = MavlinkSerialize.Deserialize(data, TestDialect.Default);
+        var parser = new MAVLink.MavlinkParse(false);
+        var mavgenPocket = parser.ReadPacket(new MemoryStream(data));
+
+        pocket.ToString().Should().Be(mavgenPocket.ToString());
+        pocket.Should().BeAssignableTo<TerrainDataPocket>()
+            .Which.Payload.Should().BeAssignableTo<TerrainDataPayload>();
+
+        var concretePocket = (TerrainDataPocket) pocket;
+        var mavgenConcretePocket = (MAVLink.mavlink_terrain_data_t) mavgenPocket.data;
+
+        concretePocket.Payload.Gridbit.Should().Be(mavgenConcretePocket.gridbit);
+        concretePocket.Payload.Lat.Should().Be(mavgenConcretePocket.lat);
+        concretePocket.Payload.Lon.Should().Be(mavgenConcretePocket.lon);
+        concretePocket.Payload.GridSpacing.Should().Be(mavgenConcretePocket.grid_spacing);
+
+        Assert.Equal(concretePocket.Payload.Data, mavgenConcretePocket.data);
     }
 }

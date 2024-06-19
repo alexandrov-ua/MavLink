@@ -1,11 +1,19 @@
 using FluentAssertions;
 using MavLink.Serialize.Dialects;
 using MavLink.Serialize.Tests.Dialects;
+using Xunit.Abstractions;
 
 namespace MavLink.Serialize.Tests;
 
 public class MavlinkSerializeSerialize
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public MavlinkSerializeSerialize(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
     [Fact]
     public void AttitudePocket()
     {
@@ -33,7 +41,7 @@ public class MavlinkSerializeSerialize
             0xfd, 0x0b, 0x00, 0x00, 0x32, 0x01, 0x01, 0x02, 0x00, 0x00, 0xb1, 0x6e, 0x91, 0x93, 0xb2, 0x1a, 0x06, 0x00,
             0xc8, 0x55, 0x23, 0xF9, 0x4A
         };
-        
+
         var pocket = MavlinkSerialize.Deserialize(data, TestDialect.Default);
         var buffer = new byte[300];
         MavlinkSerialize.Serialize(pocket, buffer, out var written);
@@ -52,7 +60,7 @@ public class MavlinkSerializeSerialize
             0x2f, 0xfc, 0x71, 0x57, 0x00, 0x00, 0x38, 0x31, 0xfa, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x5b, 0xee, 0x50
         };
-        
+
         var pocket = MavlinkSerialize.Deserialize(data, TestDialect.Default);
         var buffer = new byte[300];
         MavlinkSerialize.Serialize(pocket, buffer, out var written);
@@ -71,7 +79,7 @@ public class MavlinkSerializeSerialize
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x7f, 0x92, 0x90, 0xec, 0xea, 0x06, 0x13, 0xe9, 0x58, 0xa4, 0xa0,
             0x13, 0x44, 0xc0, 0x00, 0x01, 0x01, 0x1f, 0x85,
         };
-        
+
         var pocket = MavlinkSerialize.Deserialize(data, TestDialect.Default);
         var buffer = new byte[300];
         MavlinkSerialize.Serialize(pocket, buffer, out var written);
@@ -80,7 +88,7 @@ public class MavlinkSerializeSerialize
 
         Assert.Equal(data, result);
     }
-    
+
     [Fact]
     public void FileTransferProtocol()
     {
@@ -102,7 +110,7 @@ public class MavlinkSerializeSerialize
             0x50, 0x45, 0x07, 0x01, 0x56, 0x41, 0x43, 0x54, 0x49, 0x4f, 0x4e, 0x01, 0x04, 0x57, 0x4c, 0x54, 0x5f, 0x4d,
             0x41, 0x58, 0x00, 0x00, 0xc8, 0x42, 0x04, 0x56, 0x52, 0x41, 0x44, 0x49, 0x62, 0xaf,
         };
-        
+
         var pocket = MavlinkSerialize.Deserialize(data, TestDialect.Default);
         var buffer = new byte[300];
         MavlinkSerialize.Serialize(pocket, buffer, out var written);
@@ -111,15 +119,16 @@ public class MavlinkSerializeSerialize
 
         Assert.Equal(data, result);
     }
-    
+
     [Fact]
     public void FileTransferProtocol2()
     {
         var data = new byte[]
         {
-            0xfd, 0x09, 0x00, 0x00, 0x48, 0x01, 0x01, 0x6e, 0x00, 0x00, 0x00, 0xff, 0xbe, 0x46, 0x00, 0x00, 0x80, 0x00, 0x02, 0x1b, 0x86,
+            0xfd, 0x09, 0x00, 0x00, 0x48, 0x01, 0x01, 0x6e, 0x00, 0x00, 0x00, 0xff, 0xbe, 0x46, 0x00, 0x00, 0x80, 0x00,
+            0x02, 0x1b, 0x86,
         };
-        
+
         var pocket = MavlinkSerialize.Deserialize(data, TestDialect.Default);
         var buffer = new byte[300];
         MavlinkSerialize.Serialize(pocket, buffer, out var written);
@@ -127,5 +136,36 @@ public class MavlinkSerializeSerialize
         var result = buffer.AsSpan().Slice(0, written).ToArray();
 
         Assert.Equal(data, result);
+    }
+
+    [Fact]
+    public void TerrainData()
+    {
+        var pocket = new TerrainDataPocket(true, 123, 255, 123,
+            new TerrainDataPayload
+            {
+                Lat = 12,
+                Lon = 23,
+                Gridbit = 0,
+                GridSpacing = 0,
+                Data = new short[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0}
+            }
+        );
+
+        Span<byte> buffer = new byte[pocket.GetMaxByteSize()];
+        MavlinkSerialize.Serialize(pocket, buffer, out var n);
+
+        Span<byte> expected = new byte[]
+        {
+            0xFD, 0x27, 0x00, 0x00, 0x7B, 0xFF, 0x7B, 0x86, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x17, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x01, 0x00, 0x02, 0x00, 0x03, 0x00, 0x04, 0x00, 0x05, 0x00, 0x06, 0x00, 0x07, 0x00, 0x08, 0x00,
+            0x09, 0x00, 0x0A, 0x00, 0x0B, 0x00, 0x0C, 0x00, 0x0D, 0x00, 0x0E, 0x00, 0x0F, 0xA7, 0x73
+        };
+        Assert.Equal(buffer.Slice(0, n).ToArray(), expected.ToArray());
+    }
+
+    public string FormatBytes(ReadOnlySpan<byte> span)
+    {
+        return string.Join(", ", BitConverter.ToString(span.ToArray()).Split("-").Select(t => $"0x{t}"));
     }
 }

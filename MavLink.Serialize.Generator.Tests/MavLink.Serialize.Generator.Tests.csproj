@@ -22,23 +22,25 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="minimal.xml" />
-      <Content Include="minimal.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Remove="standard.xml" />
-      <Content Include="standard.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Remove="common.xml" />
-      <Content Include="common.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\MavLink.Serialize\MavLink.Serialize.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true"/>
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <None Remove="DialectXmls\common.xml" />
+      <Content Include="DialectXmls\common.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="DialectXmls\minimal.xml" />
+      <Content Include="DialectXmls\minimal.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="DialectXmls\standard.xml" />
+      <Content Include="DialectXmls\standard.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

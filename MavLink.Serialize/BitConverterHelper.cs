@@ -26,24 +26,34 @@ public static class BitConverterHelper
         return default(T);
     }
 
-    public static void ReadArray<T>(T[] array, ref ReadOnlySpan<byte> span) where T : struct
+  
+    public static T[] ReadArray<T>(T[] array, ref ReadOnlySpan<byte> span) where T : struct
     {
-        ArgumentNullException.ThrowIfNull(array);//TODO: use span.CopyTo and MemoryMarshal.Cast<>
-        
-        for (int i = 0; i < array.Length; i++)
+        ArgumentNullException.ThrowIfNull(array);
+        var size = Marshal.SizeOf<T>();
+        var aligning = span.Length % size;
+        if (aligning == 0)
         {
-            array[i] = Read<T>(ref span);
+            MemoryMarshal.Cast<byte, T>(span).CopyTo(array);
+            span = span.Slice(span.Length);
         }
+        else
+        {
+            var newLen = span.Length - aligning;
+            MemoryMarshal.Cast<byte, T>(span.Slice(0, newLen)).CopyTo(array);
+            span = span.Slice(newLen);
+            array[newLen / size] = Read<T>(ref span);
+        }
+        return array;
     }
     
     public static void WriteArray<T>(T[] array, ref Span<byte> span) where T : struct
     {
-        ArgumentNullException.ThrowIfNull(array);//TODO: use span.CopyTo and MemoryMarshal.Cast<>
+        ArgumentNullException.ThrowIfNull(array);
         
-        for (int i = 0; i < array.Length; i++)
-        {
-            Write<T>(array[i], ref span);
-        }
+        var casted = MemoryMarshal.Cast<T, byte>(array);
+        casted.CopyTo(span);
+        span = span.Slice(casted.Length);
     }
 
     public static void Write<T>(in T value, ref Span<byte> span) where T : struct

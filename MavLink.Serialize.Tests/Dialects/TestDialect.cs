@@ -22,6 +22,8 @@ public class TestDialect : IDialect
                 AttitudePayload.Deserialize(payload)),
             110 => new FileTransferProtocolPocket(isMavlinkV2, sequenceNumber, systemId, componentId,
                 FileTransferProtocolPayload.Deserialize(payload)),
+            134 => new TerrainDataPocket(isMavlinkV2, sequenceNumber, systemId, componentId,
+                TerrainDataPayload.Deserialize(payload)),
             _ => null
         };
     }
@@ -309,7 +311,7 @@ public class FileTransferProtocolPayload : IPayload<FileTransferProtocolPayload>
     public byte TargetNetwork { get; private set; }
     public byte TargetSystem { get; private set; }
     public byte TargetComponent { get; private set; }
-    public byte[] Payload { get; private set; } = new byte[251];
+    public byte[] Payload { get; private set; }
 
     public static FileTransferProtocolPayload Deserialize(ReadOnlySpan<byte> span)
     {
@@ -317,7 +319,7 @@ public class FileTransferProtocolPayload : IPayload<FileTransferProtocolPayload>
         payload.TargetNetwork = BitConverterHelper.Read<byte>(ref span);
         payload.TargetSystem = BitConverterHelper.Read<byte>(ref span);
         payload.TargetComponent = BitConverterHelper.Read<byte>(ref span);
-        BitConverterHelper.ReadArray<byte>(payload.Payload, ref span);
+        payload.Payload = BitConverterHelper.ReadArray<byte>(new byte[251], ref span);
         return payload;
     }
 
@@ -336,6 +338,79 @@ public class FileTransferProtocolPayload : IPayload<FileTransferProtocolPayload>
 
 
     public int GetMaxByteSize() => 254;
+}
+
+public class TerrainDataPocket : Pocket<TerrainDataPayload>
+{
+    public TerrainDataPocket(bool isMavlink2, byte sequenceNumber, byte systemId, byte componentId,
+        TerrainDataPayload payload) : base(isMavlink2, sequenceNumber, systemId, componentId, payload)
+    {
+    }
+
+    public override uint MessageId => 134;
+    public override string MessageName => "TERRAIN_DATA";
+    public override int GetMaxByteSize() => Payload.GetMaxByteSize() + 12;
+
+    public override byte GetChecksumExtra() => 229;
+}
+
+public class TerrainDataPayload : IPayload<TerrainDataPayload>, IPayload
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public int Lat { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public int Lon { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public ushort GridSpacing { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public short[] Data { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public byte Gridbit { get; init; }
+
+    public static TerrainDataPayload Deserialize(ReadOnlySpan<byte> span)
+    {
+        var payload = new TerrainDataPayload()
+        {
+            Lat = BitConverterHelper.Read<int>(ref span),
+            Lon = BitConverterHelper.Read<int>(ref span),
+            GridSpacing = BitConverterHelper.Read<ushort>(ref span),
+            Data = BitConverterHelper.ReadArray<short>(new short[16], ref span),
+            Gridbit = BitConverterHelper.Read<byte>(ref span),
+        };
+
+
+        return payload;
+    }
+
+    public static void Serialize(TerrainDataPayload payload, Span<byte> span)
+    {
+        payload.Serialize(span);
+    }
+
+    public void Serialize(Span<byte> span)
+    {
+        BitConverterHelper.Write(Lat, ref span);
+        BitConverterHelper.Write(Lon, ref span);
+        BitConverterHelper.Write(GridSpacing, ref span);
+        BitConverterHelper.WriteArray(Data, ref span);
+        BitConverterHelper.Write(Gridbit, ref span);
+    }
+
+    public int GetMaxByteSize() => 43;
 }
 
 #endregion

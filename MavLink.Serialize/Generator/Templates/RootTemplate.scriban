@@ -2,6 +2,7 @@ using System;
 using MavLink.Serialize;
 using MavLink.Serialize.Dialects;
 using MavLink.Serialize.Messages;
+using System.Collections.Generic;
 
 namespace {{ Namespace }};
 
@@ -91,26 +92,27 @@ public class {{ messageName }}Payload : IPayload<{{ messageName }}Payload>, IPay
     /// {{ string.strip_newlines item.Description }}
     /// </summary>
     {{~ if item.Type.IsEnum ~}}
-    public {{ to_pascal_case item.Type.Enum }} {{ to_pascal_case item.Name }} { get; private set; }
+    public {{ to_pascal_case item.Type.Enum }} {{ to_pascal_case item.Name }} { get; init; }
     {{~ else if item.Type.IsArray ~}}
-    public {{ item.Type.CsType }}[] {{ to_pascal_case item.Name }} { get; private set; } = new {{ item.Type.CsType }}[{{ item.Type.ArrayLength }}];
+    public {{ item.Type.CsType }}[] {{ to_pascal_case item.Name }} { get; init; }
     {{~ else ~}}
-    public {{ item.Type.CsType }} {{ to_pascal_case item.Name }} { get; private set; }
+    public {{ item.Type.CsType }} {{ to_pascal_case item.Name }} { get; init; }
     {{~ end ~}}
     {{~ end ~}}
 
     public static {{ messageName }}Payload Deserialize(ReadOnlySpan<byte> span)
     {
-        var payload = new {{ messageName }}Payload();
-        {{~ for item in message.Items ~}}
-        {{~ if item.Type.IsEnum ~}}
-        payload.{{ to_pascal_case item.Name }} = ({{ to_pascal_case item.Type.Enum }})BitConverterHelper.Read<{{ item.Type.CsType }}>(ref span);
-        {{~ else if item.Type.IsArray ~}}
-        BitConverterHelper.ReadArray<{{ item.Type.CsType }}>(payload.{{ to_pascal_case item.Name }}, ref span);
-        {{~ else ~}}
-        payload.{{ to_pascal_case item.Name }} = BitConverterHelper.Read<{{ item.Type.CsType }}>(ref span);
-        {{~ end ~}}
-        {{~ end ~}}
+        var payload = new {{ messageName }}Payload(){
+            {{~ for item in message.Items ~}}
+            {{~ if item.Type.IsEnum ~}}
+            {{ to_pascal_case item.Name }} = ({{ to_pascal_case item.Type.Enum }})BitConverterHelper.Read<{{ item.Type.CsType }}>(ref span),
+            {{~ else if item.Type.IsArray ~}}
+            {{ to_pascal_case item.Name }} = BitConverterHelper.ReadArray<{{ item.Type.CsType }}>(new {{ item.Type.CsType }}[{{ item.Type.ArrayLength }}], ref span),
+            {{~ else ~}}
+            {{ to_pascal_case item.Name }} = BitConverterHelper.Read<{{ item.Type.CsType }}>(ref span),
+            {{~ end ~}}
+            {{~ end ~}}
+        };
         return payload;
     }
 
