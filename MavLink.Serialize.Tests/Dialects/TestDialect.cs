@@ -1,12 +1,13 @@
+using MavLink.Serialize.Dialects;
 using MavLink.Serialize.Messages;
 
-namespace MavLink.Serialize.Dialects.Test;
+namespace MavLink.Serialize.Tests.Dialects;
 
 public class TestDialect : IDialect
 {
     public static IDialect Default { get; } = new TestDialect();
 
-    public IPocket<IPayload> CreatePocket(uint messageId, bool isMavlinkV2, byte sequenceNumber,
+    public IPocket<IPayload>? CreatePocket(uint messageId, bool isMavlinkV2, byte sequenceNumber,
         byte systemId, byte componentId, ReadOnlySpan<byte> payload)
     {
         return messageId switch
@@ -19,7 +20,9 @@ public class TestDialect : IDialect
                 CommandIntPayload.Deserialize(payload)),
             30 => new AttitudePocket(isMavlinkV2, sequenceNumber, systemId, componentId,
                 AttitudePayload.Deserialize(payload)),
-            _ => throw new NotImplementedException()
+            110 => new FileTransferProtocolPocket(isMavlinkV2, sequenceNumber, systemId, componentId,
+                FileTransferProtocolPayload.Deserialize(payload)),
+            _ => null
         };
     }
 }
@@ -285,6 +288,54 @@ public class SystemTimePayload : IPayload<SystemTimePayload>, IPayload
 
 
     public int GetMaxByteSize() => 12;
+}
+
+public class FileTransferProtocolPocket : Pocket<FileTransferProtocolPayload>
+{
+    public FileTransferProtocolPocket(bool isMavlink2, byte sequenceNumber, byte systemId, byte componentId,
+        FileTransferProtocolPayload payload) : base(isMavlink2, sequenceNumber, systemId, componentId, payload)
+    {
+    }
+
+    public override uint MessageId => 110;
+    public override string MessageName => "FILE_TRANSFER_PROTOCOL";
+    public override int GetMaxByteSize() => Payload.GetMaxByteSize() + 12;
+
+    public override byte GetChecksumExtra() => 84;
+}
+
+public class FileTransferProtocolPayload : IPayload<FileTransferProtocolPayload>, IPayload
+{
+    public byte TargetNetwork { get; private set; }
+    public byte TargetSystem { get; private set; }
+    public byte TargetComponent { get; private set; }
+    public byte[] Payload { get; private set; } = new byte[251];
+
+    public static FileTransferProtocolPayload Deserialize(ReadOnlySpan<byte> span)
+    {
+        var payload = new FileTransferProtocolPayload();
+        payload.TargetNetwork = BitConverterHelper.Read<byte>(ref span);
+        payload.TargetSystem = BitConverterHelper.Read<byte>(ref span);
+        payload.TargetComponent = BitConverterHelper.Read<byte>(ref span);
+        BitConverterHelper.ReadArray<byte>(payload.Payload, ref span);
+        return payload;
+    }
+
+    public static void Serialize(FileTransferProtocolPayload payload, Span<byte> span)
+    {
+        payload.Serialize(span);
+    }
+
+    public void Serialize(Span<byte> span)
+    {
+        BitConverterHelper.Write(TargetNetwork, ref span);
+        BitConverterHelper.Write(TargetSystem, ref span);
+        BitConverterHelper.Write(TargetComponent, ref span);
+        BitConverterHelper.WriteArray(Payload, ref span);
+    }
+
+
+    public int GetMaxByteSize() => 254;
 }
 
 #endregion
