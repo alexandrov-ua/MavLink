@@ -22,7 +22,7 @@ public record RootRenderModel(
     }
 }
 
-public record MessageRenderModel(string Name, int Id, string Description, List<MessageItemRenderModel> Items)
+public record MessageRenderModel(string Name, int Id, string Description, List<MessageItemRenderModel> Items, int? ExtensionIndex)
 {
     public int Size => Items.Select(t => t.Type.ActualSize).Sum();
 
@@ -31,7 +31,7 @@ public record MessageRenderModel(string Name, int Id, string Description, List<M
         get
         {
             var acc = ChecksumHelper.Accumulate(Name + " ", 0xFFFF);
-            foreach (var i in Items)
+            foreach (var i in Items.Take(ExtensionIndex ?? Items.Count))
             {
                 acc = ChecksumHelper.Accumulate($"{i.Type.OriginalType} {i.Name} ", acc);
                 if (i.Type.IsArray)
@@ -63,7 +63,7 @@ public record MessageRenderModel(string Name, int Id, string Description, List<M
 
         var orderedItems = itemsModel.ToList();
         var message = new MessageRenderModel(messageDefinition.Name, messageDefinition.Id,
-            messageDefinition.Description ?? "", orderedItems);
+            messageDefinition.Description ?? "", orderedItems, messageDefinition.ExtensionIndex);
         return message;
     }
 }

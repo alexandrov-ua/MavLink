@@ -37,7 +37,7 @@ public class GeneratorIntegrationTest
         {
             0xfd, 0x09, 0x00, 0x00, 0x12, 0xff, 0xbe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x08, 0xc0, 0x04, 0x03, 0x5d, 0xc6, 
         };
-        var pocket = (HeartbeatPocket)MavlinkSerialize.Deserialize(buffer, MyMinimalDialect.Create());
+        var pocket = (HeartbeatPocket)MavlinkSerialize.Deserialize(buffer, MyCommonDialect.Create(MyStandardDialect.Create(MyMinimalDialect.Create())));
 
         pocket.MessageId.Should().Be(0);
         pocket.SequenceNumber.Should().Be(18);
@@ -62,5 +62,20 @@ public class GeneratorIntegrationTest
 
         pocket.Payload.TimeBootMs.Should().Be(16928932);
         pocket.Payload.TimeUnixUsec.Should().Be(1718386127758985);
+    }
+    
+    [Fact]
+    public void TestMessageDeserialization2()
+    {
+        var buffer = new byte[]
+        {
+            0xfd, 0x1f, 0x00, 0x00, 0x38, 0x01, 0x01, 0x01, 0x00, 0x00, 0x2f, 0xfc, 0x71, 0x53, 0x2f, 0xfc, 0x61, 0x53,
+            0x2f, 0xfc, 0x71, 0x57, 0x00, 0x00, 0x38, 0x31, 0xfa, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x5b, 0xee, 0x50  
+        };
+        var pocket = (SysStatusPocket)MavlinkSerialize.Deserialize(buffer, MyCommonDialect.Create(MyStandardDialect.Create(MyMinimalDialect.Create())));
+    
+        // pocket.Payload.TimeBootMs.Should().Be(16928932);
+        // pocket.Payload.TimeUnixUsec.Should().Be(1718386127758985);
     }
 }

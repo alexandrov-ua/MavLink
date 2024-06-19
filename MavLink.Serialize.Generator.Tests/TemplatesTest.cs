@@ -32,7 +32,7 @@ public class TemplatesTest
                     {
                         new MessageItemRenderModel("type", new TypeRenderModel("uint8_t", "byte", 1,null, null)),
                         new MessageItemRenderModel("custom_mode", new TypeRenderModel("uint32_t", "uint", 4,null, null)),
-                    }),
+                    }, null),
                 new MessageRenderModel(
                     "PROTOCOL_VERSION", 
                     300, 
@@ -41,7 +41,7 @@ public class TemplatesTest
                     {
                         new MessageItemRenderModel("version", new TypeRenderModel("uint16_t", "ushort", 2,10, null)),
                         new MessageItemRenderModel("custom_mode", new TypeRenderModel("uint32_t", "uint", 4,null, null)),
-                    }),
+                    }, null),
                 new MessageRenderModel(
                     "PROTOCOL_VERSION1", 
                     301, 
@@ -50,7 +50,7 @@ public class TemplatesTest
                     {
                         new MessageItemRenderModel("version", new TypeRenderModel("uint16_t", "ushort", 2,null, "MAV_AUTOPILOT")),
                         new MessageItemRenderModel("custom_mode", new TypeRenderModel("uint32_t", "uint", 4,null, null)),
-                    }),
+                    }, null),
             },
             new List<EnumRenderModel>()
             {

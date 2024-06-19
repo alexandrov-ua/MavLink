@@ -33,7 +33,7 @@ public static class DialectXmlParser
                     Id: int.Parse(t.Attribute("id")?.Value!),
                     Description: t.Element("description")?.Value,
                     ExtensionIndex: t.Descendants()
-                        .Select((val, i) => new { Value = val, Index = i })
+                        .Select((val, i) => new { Value = val, Index = i - 1 })
                         .FirstOrDefault(o => o.Value.Name.ToString() == "extensions")?.Index,
                     Items: t.Elements("field")
                         .Select(q => new MessageItemDefinition(
