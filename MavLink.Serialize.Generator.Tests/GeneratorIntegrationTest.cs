@@ -4,19 +4,19 @@ using MavLink.Serialize.Dialects;
 
 namespace MavLink.Serialize.Generator.Tests;
 
-[Dialect("minimal.xml")]
+[Dialect("DialectXmls/minimal.xml")]
 public partial class MyMinimalDialect
 {
     
 }
 
-[Dialect("standard.xml")]
+[Dialect("DialectXmls/standard.xml")]
 public partial class MyStandardDialect
 {
     
 }
 
-[Dialect("common.xml")]
+[Dialect("DialectXmls/common.xml")]
 public partial class MyCommonDialect
 {
     

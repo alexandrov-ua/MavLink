@@ -17,7 +17,7 @@ public class DialectXmlParserTest
     [Fact]
     public void Foo()
     {
-        var document = XDocument.Load("common.xml");
+        var document = XDocument.Load("DialectXmls/common.xml");
 
         var mavlink = document.Element("mavlink");
         mavlink.Should().NotBeNull();
@@ -32,7 +32,7 @@ public class DialectXmlParserTest
     [Fact]
     public void Bar()
     {
-        var document = XDocument.Load("common.xml");
+        var document = XDocument.Load("DialectXmls/common.xml");
 
         var mavlink = document.Element("mavlink");
         var values =
@@ -45,7 +45,7 @@ public class DialectXmlParserTest
     [Fact]
     public void Quxx()
     {
-        var document = XDocument.Load("common.xml");
+        var document = XDocument.Load("DialectXmls/common.xml");
 
         var mavlink = document.Element("mavlink");
         mavlink.Should().NotBeNull();
@@ -61,12 +61,4 @@ public class DialectXmlParserTest
         _testOutputHelper.WriteLine(string.Join("\n", types));
     }
 
-    [Fact]
-    public void QWee()
-    {
-        _testOutputHelper.WriteLine(sizeof(char).ToString());
-        _testOutputHelper.WriteLine(sizeof(float).ToString());
-        _testOutputHelper.WriteLine(sizeof(double).ToString());
-            
-    }
 }

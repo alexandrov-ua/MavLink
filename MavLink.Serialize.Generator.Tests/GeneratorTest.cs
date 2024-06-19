@@ -14,7 +14,6 @@ public class DialectGeneratorTest
     {
         _testOutputHelper = testOutputHelper;
         _generatorTestHelper = new GeneratorTestHelper<Serialize.Generator.DialectGenerator>();
-        //_generatorTestHelper.AddDependenciesSource(DependentSources.List);
     }
 
     [Fact]
@@ -27,7 +26,7 @@ public class DialectGeneratorTest
             namespace MavLink.Tests;
             
             
-            [Dialect("minimal.xml")]
+            [Dialect("DialectXmls/minimal.xml")]
             public partial class MinimalDialect
             {
                 
@@ -47,9 +46,14 @@ public class DialectGeneratorTest
 
             namespace MavLink.Tests;
 
-
-            [Dialect("common.xml")]
+            [Dialect("DialectXmls/minimal.xml")]
             public partial class MinimalDialect
+            {
+                
+            }
+            
+            [Dialect("DialectXmls/common.xml")]
+            public partial class CommonDialect
             {
                 
             }
@@ -67,7 +71,7 @@ public class DialectGeneratorTest
             namespace MavLink.Tests;
 
 
-            [Dialect("minimal.xml")]
+            [Dialect("DialectXmls/minimal.xml")]
             public partial class MinimalDialect
             {
                 
@@ -88,7 +92,7 @@ public class DialectGeneratorTest
             namespace MavLink.Tests;
 
 
-            [Dialect("minimal.xml")]
+            [Dialect("DialectXmls/minimal.xml")]
             public partial class MinimalDialect
             {
                 sdfsdfdssd
