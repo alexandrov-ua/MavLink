@@ -22,6 +22,12 @@ public partial class MyCommonDialect
     
 }
 
+[Dialect("DialectXmls/ASLUAV.xml")]
+public partial class MyAsluavDialect
+{
+    
+}
+
 public class GeneratorIntegrationTest
 {
     [Fact]

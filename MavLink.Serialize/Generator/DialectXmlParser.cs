@@ -40,7 +40,8 @@ public static class DialectXmlParser
                             Name: q.Attribute("name")?.Value!,
                             Type: q.Attribute("type")?.Value!,
                             Enum: q.Attribute("enum")?.Value,
-                            Display: q.Attribute("display")?.Value
+                            Display: q.Attribute("display")?.Value,
+                            Description: q.Value
                         )).ToList()
                 )).ToList();
         
@@ -72,6 +73,6 @@ public record MessageDefinition(
 {
 }
 
-public record MessageItemDefinition(string Type, string Name, string? Enum, string? Display)
+public record MessageItemDefinition(string Type, string Name, string Description, string? Enum, string? Display)
 {
 }

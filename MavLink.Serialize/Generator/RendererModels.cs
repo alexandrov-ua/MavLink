@@ -9,7 +9,13 @@ public record RootRenderModel(
 {
     public bool AnyIncludes => Includes.Any();
     public string IncludesParameters => string.Join(", ", Includes.Select(t => $"IDialect {t.Replace(".","")}"));
-   
+
+    public bool AnyHiddenEnums => HiddenEnums.Any();
+
+    public IEnumerable<EnumRenderModel> GlobalEnums => Enums.Where(t => t.Name != "MAV_CMD");
+    public IEnumerable<EnumRenderModel> HiddenEnums => Enums.Where(t => t.Name == "MAV_CMD");
+    
+    
     public static RootRenderModel CreateFromDefinition(RootDefinition rootDefinition, ClassNodeInfo classNodeInfo)
     {
         return new RootRenderModel(
@@ -68,12 +74,13 @@ public record MessageRenderModel(string Name, int Id, string Description, List<M
     }
 }
 
-public record MessageItemRenderModel(string Name, TypeRenderModel Type)
+public record MessageItemRenderModel(string Name, TypeRenderModel Type, string Description)
 {
     public static MessageItemRenderModel CreateFromDefinition(MessageItemDefinition messageItemDefinition)
     {
         return new MessageItemRenderModel(messageItemDefinition.Name,
-            TypeRenderModel.CreateFromType(messageItemDefinition.Type, messageItemDefinition.Enum));
+            TypeRenderModel.CreateFromType(messageItemDefinition.Type, messageItemDefinition.Enum), 
+            messageItemDefinition.Description);
     }
 }
 
@@ -81,6 +88,8 @@ public record TypeRenderModel(string OriginalType, string CsType, int Size, byte
 {
     public bool IsEnum => Enum != null;
     public bool IsArray => ArrayLength != null;
+
+    public bool IsHidden => Enum == "MAV_CMD";
 
     public int ActualSize => IsArray ? Size * ArrayLength!.Value : Size;
 

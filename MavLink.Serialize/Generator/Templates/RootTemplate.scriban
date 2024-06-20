@@ -43,11 +43,28 @@ public partial class {{ ClassName }} : IDialect
             {{~ end ~}}
         };
     }
+    {{~ for enum in HiddenEnums ~}}
+    /// <summary>
+    /// {{ string.strip_newlines enum.Description }}
+    /// </summary>
+    {{ if enum.IsBitmask }}
+    [Flags]
+    {{ end -}}
+    public enum {{ to_pascal_case enum.Name }} : uint
+    {
+        {{~ for item in enum.Items ~}}
+        /// <summary>
+        /// {{ string.strip_newlines item.Description }}
+        /// </summary>
+        {{ item.Name }} = {{ item.Index }},
+        {{~ end ~}}
+    }
+    {{~ end ~}}
 }
 
 #region Enums
 
-{{~ for enum in Enums ~}}
+{{~ for enum in GlobalEnums ~}}
 /// <summary>
 /// {{ string.strip_newlines enum.Description }}
 /// </summary>
@@ -90,9 +107,12 @@ public class {{ messageName }}Payload : IPayload<{{ messageName }}Payload>, IPay
     {{~ for item in message.Items ~}}
     /// <summary>
     /// {{ string.strip_newlines item.Description }}
+    {{~ if item.Type.IsArray ~}}
+    /// Array length: {{ item.Type.ArrayLength }}
+    {{~ end ~}}
     /// </summary>
     {{~ if item.Type.IsEnum ~}}
-    public {{ to_pascal_case item.Type.Enum }} {{ to_pascal_case item.Name }} { get; init; }
+    public {{ item.Type.IsHidden ? ClassName + "." : "" -}}{{ to_pascal_case item.Type.Enum }} {{ to_pascal_case item.Name }} { get; init; }
     {{~ else if item.Type.IsArray ~}}
     public {{ item.Type.CsType }}[] {{ to_pascal_case item.Name }} { get; init; }
     {{~ else ~}}
@@ -105,7 +125,7 @@ public class {{ messageName }}Payload : IPayload<{{ messageName }}Payload>, IPay
         var payload = new {{ messageName }}Payload(){
             {{~ for item in message.Items ~}}
             {{~ if item.Type.IsEnum ~}}
-            {{ to_pascal_case item.Name }} = ({{ to_pascal_case item.Type.Enum }})BitConverterHelper.Read<{{ item.Type.CsType }}>(ref span),
+            {{ to_pascal_case item.Name }} = ({{ item.Type.IsHidden ? ClassName + "." : "" -}}{{ to_pascal_case item.Type.Enum }})BitConverterHelper.Read<{{ item.Type.CsType }}>(ref span),
             {{~ else if item.Type.IsArray ~}}
             {{ to_pascal_case item.Name }} = BitConverterHelper.ReadArray<{{ item.Type.CsType }}>(new {{ item.Type.CsType }}[{{ item.Type.ArrayLength }}], ref span),
             {{~ else ~}}
