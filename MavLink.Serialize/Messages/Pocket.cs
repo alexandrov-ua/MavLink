@@ -8,7 +8,7 @@ public abstract class Pocket<T> : IPocket<T> where T : IPayload
     public abstract int GetMaxByteSize();
     public abstract byte GetChecksumExtra();
     public bool IsMavlinkV2 { get; } 
-    public byte SequenceNumber { get; }
+    public byte SequenceNumber { get; set; }
     public byte SystemId { get; } 
     public byte ComponentId { get; }
     public T Payload { get; }
@@ -24,6 +24,6 @@ public abstract class Pocket<T> : IPocket<T> where T : IPayload
 
     public override string ToString()
     {
-        return $"{DateTime.MinValue},{IsMavlinkV2},{SystemId},{ComponentId},{(uint)MessageId},{MessageName}";
+        return $"{SequenceNumber},{IsMavlinkV2},{SystemId},{ComponentId},{(uint)MessageId},{MessageName}";
     }
 }
