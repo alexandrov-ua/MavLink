@@ -1,4 +1,6 @@
 using BenchmarkDotNet.Attributes;
+using MavLink.Serialize.Dialects;
+using MavLink.Serialize.Generator.Tests;
 using MavLink.Serialize.Messages;
 using MavLink.Serialize.Tests.Dialects;
 using MavLink.Serialize.Tests.Mavgen;
@@ -35,11 +37,12 @@ public class DeserializeBenchmark
     public byte[] Data { get; set; }
 
     private MAVLink.MavlinkParse _parser = new MAVLink.MavlinkParse(false);
+    private IDialect _dialect = MyCommonDialect.Create(MyStandardDialect.Create(MyMinimalDialect.Create()));
 
     [Benchmark]
     public IPocket<IPayload> Deserialize()
     {
-        return MavlinkSerialize.Deserialize(Data, TestDialect.Default);
+        return MavlinkSerialize.Deserialize(Data, _dialect);
     }
 
     [Benchmark(Baseline = true)]

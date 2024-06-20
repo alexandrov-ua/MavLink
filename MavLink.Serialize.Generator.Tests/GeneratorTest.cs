@@ -64,6 +64,38 @@ public class DialectGeneratorTest
     }
     
     [Fact]
+    public void Positive2()
+    {
+        var (output, diagnostics) = _generatorTestHelper.GetGeneratedOutput(
+            """
+            using MavLink.Serialize.Dialects;
+
+            namespace MavLink.Tests;
+
+            [Dialect("DialectXmls/minimal.xml")]
+            public partial class MinimalDialect
+            {
+                
+            }
+
+            [Dialect("DialectXmls/common.xml")]
+            public partial class CommonDialect
+            {
+                
+            }
+            
+            [Dialect("DialectXmls/cubepilot.xml")]
+            public partial class CubepilotDialect
+            {
+                
+            }
+            """);
+
+        diagnostics.Where(t=>t.Severity > DiagnosticSeverity.Warning).Should().BeEmpty();
+        _testOutputHelper.WriteLine(output);
+    }
+    
+    [Fact]
     public void Negative()
     {
         var (output, diagnostics) = _generatorTestHelper.GetGeneratedOutput(

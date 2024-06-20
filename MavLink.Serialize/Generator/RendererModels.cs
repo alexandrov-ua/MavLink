@@ -91,6 +91,8 @@ public record TypeRenderModel(string OriginalType, string CsType, int Size, byte
 
     public bool IsHidden => Enum == "MAV_CMD";
 
+    public bool IsString => OriginalType == "char";
+
     public int ActualSize => IsArray ? Size * ArrayLength!.Value : Size;
 
     public static TypeRenderModel CreateFromType(string type, string? @enum)
@@ -116,9 +118,9 @@ public record TypeRenderModel(string OriginalType, string CsType, int Size, byte
     {
         return type switch
         {
-            "char" => new TypeRenderModel(type, "char", 2, arrayLanght, @enum),
-            "double" => new TypeRenderModel(type, "double", 4, arrayLanght, @enum),
-            "float" => new TypeRenderModel(type, "float", 8, arrayLanght, @enum),
+            "char" => new TypeRenderModel(type, "string", 1, arrayLanght, @enum),
+            "double" => new TypeRenderModel(type, "double", 8, arrayLanght, @enum),
+            "float" => new TypeRenderModel(type, "float", 4, arrayLanght, @enum),
             "int8_t" => new TypeRenderModel(type, "sbyte", 1, arrayLanght, @enum),
             "int16_t" => new TypeRenderModel(type, "short", 2, arrayLanght, @enum),
             "int32_t" => new TypeRenderModel(type, "int", 4, arrayLanght, @enum),

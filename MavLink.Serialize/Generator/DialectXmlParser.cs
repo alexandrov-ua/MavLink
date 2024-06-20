@@ -9,10 +9,10 @@ public static class DialectXmlParser
         var document = XDocument.Load(fileName);
         
         var mavlink = document.Element("mavlink");
-        var version = mavlink!.Element("version")?.Value;
+        var version = mavlink?.Element("version")?.Value ?? "";
         
         var enumDefinitions =
-            mavlink.Element("enums")!
+            mavlink!.Element("enums")?
                 .Elements("enum")
                 .Select(t => new EnumDefinition(
                     Name: t.Attribute("name")?.Value ?? "",
@@ -24,9 +24,9 @@ public static class DialectXmlParser
                             Description: q.Element("description")?.Value ?? "",
                             Index: uint.Parse(q.Attribute("value")?.Value ?? "0")
                         )).ToList()
-                )).ToList();
+                )).ToList() ?? new List<EnumDefinition>();
         var messagesDefinitions =
-            mavlink.Element("messages")!
+            mavlink.Element("messages")?
                 .Elements("message")
                 .Select(t => new MessageDefinition(
                     Name: t.Attribute("name")?.Value!,
@@ -43,7 +43,7 @@ public static class DialectXmlParser
                             Display: q.Attribute("display")?.Value,
                             Description: q.Value
                         )).ToList()
-                )).ToList();
+                )).ToList() ?? new List<MessageDefinition>();
         
         var includes = mavlink.Elements("include")
             .Select(t => t.Value).ToList();

@@ -113,6 +113,8 @@ public class {{ messageName }}Payload : IPayload<{{ messageName }}Payload>, IPay
     /// </summary>
     {{~ if item.Type.IsEnum ~}}
     public {{ item.Type.IsHidden ? ClassName + "." : "" -}}{{ to_pascal_case item.Type.Enum }} {{ to_pascal_case item.Name }} { get; init; }
+    {{~ else if item.Type.IsString ~}}
+    public {{ item.Type.CsType }} {{ to_pascal_case item.Name }} { get; init; }
     {{~ else if item.Type.IsArray ~}}
     public {{ item.Type.CsType }}[] {{ to_pascal_case item.Name }} { get; init; }
     {{~ else ~}}
@@ -126,6 +128,8 @@ public class {{ messageName }}Payload : IPayload<{{ messageName }}Payload>, IPay
             {{~ for item in message.Items ~}}
             {{~ if item.Type.IsEnum ~}}
             {{ to_pascal_case item.Name }} = ({{ item.Type.IsHidden ? ClassName + "." : "" -}}{{ to_pascal_case item.Type.Enum }})BitConverterHelper.Read<{{ item.Type.CsType }}>(ref span),
+            {{~ else if item.Type.IsString ~}}
+            {{ to_pascal_case item.Name }} = BitConverterHelper.ReadString({{ item.Type.ArrayLength }}, ref span),
             {{~ else if item.Type.IsArray ~}}
             {{ to_pascal_case item.Name }} = BitConverterHelper.ReadArray<{{ item.Type.CsType }}>(new {{ item.Type.CsType }}[{{ item.Type.ArrayLength }}], ref span),
             {{~ else ~}}
@@ -146,6 +150,8 @@ public class {{ messageName }}Payload : IPayload<{{ messageName }}Payload>, IPay
         {{~ for item in message.Items ~}}
         {{~ if item.Type.IsEnum ~}}
         BitConverterHelper.Write(({{ item.Type.CsType }}){{ to_pascal_case item.Name}}, ref span);
+        {{~ else if item.Type.IsString ~}}
+        BitConverterHelper.WriteString({{ to_pascal_case item.Name}}, {{ item.Type.ArrayLength }}, ref span);
         {{~ else if item.Type.IsArray ~}}
         BitConverterHelper.WriteArray({{ to_pascal_case item.Name}}, ref span);
         {{~ else ~}}
