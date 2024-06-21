@@ -1,61 +1,33 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using System.Collections.Concurrent;
-using System.Net;
-using System.Net.Sockets;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Reactive.Linq;
 using MavLink.Client;
 using MavLink.Client.TestApp.Dialects;
-using MavLink.Serialize.Messages;
 
-var queue = new ConcurrentQueue<IPocket<IPayload>>();
-var cts = new CancellationTokenSource();
-Console.CancelKeyPress += new ConsoleCancelEventHandler((_, e) =>
-{
-    //cts.Cancel();
-    
-    queue.Enqueue(new CommandLongPocket(true, 0, 255, 190, new CommandLongPayload()
+using var client =
+    new MavLinkReactiveClient(MavLinkClient.Create(args.FirstOrDefault() ?? "udp://127.0.0.1:14550",
+        ArduPilotMegaDialect.Default));
+
+using var _ = client.GroupBy(t => t.MessageName)
+    .Select(t => t.TimeInterval())
+    .SelectMany(t => t)
+    .Buffer(TimeSpan.FromSeconds(1))
+    .Subscribe((t) =>
     {
-        Command = CommonDialect.MavCmd.MAV_CMD_REQUEST_MESSAGE,
-        TargetComponent = 1,
-        TargetSystem = 1,
-        Param1 = 148
-    }));
-    
-    e.Cancel = true;
-});
+        Console.Clear();
+        Console.WriteLine("====================================");
+        foreach (var i in t.GroupBy(z => z.Value.MessageName)
+                     .Select(z => new
+                     {
+                         Value = z.First().Value,
+                         Count = z.Count(),
+                         Avg = z.Average(q => q.Interval.TotalMilliseconds)
+                     })
+                     .OrderBy(t => t.Count))
+        {
+            Console.WriteLine(
+                $"{i.Value.MessageName,40}{i.Value.MessageId,10}{i.Count,10}{(1000 / i.Avg).ToString("F"),20} Hz");
+        }
 
-//Console.
+        Console.WriteLine();
+    });
 
-void Foo()
-{
-    var e = new UdpClient();
-    //e.Receive(ref new IPEndPoint((long)1234567,123));
-}
-
-
-
-
-using var client = MavLinkClient.Create("udp://127.0.0.1:14550", ArduPilotMegaDialect.Default);
-
-var cancellationToken = cts.Token;
-
-
-
-while (!cancellationToken.IsCancellationRequested)
-{
-    var pocket = client.Receive();
-    Console.WriteLine(pocket.ToString());
-    Console.WriteLine(JsonSerializer.Serialize(pocket.Payload, pocket.Payload.GetType(), new JsonSerializerOptions()
-    {
-        NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals
-    }));
-
-    if (queue.TryDequeue(out var pocketToSend))
-    {
-        pocketToSend.SequenceNumber = (byte)(pocket.SequenceNumber + 1);
-        await client.Send(pocketToSend);   
-        Console.WriteLine("Sent: "+pocketToSend.ToString());
-    }
-}
+Console.ReadKey();
