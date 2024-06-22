@@ -30,4 +30,9 @@ public class UdpTansport : IMavLinkTransport
     {
         _socket.Dispose();
     }
+
+    ~UdpTansport()
+    {
+        _socket.Dispose();
+    }
 }
