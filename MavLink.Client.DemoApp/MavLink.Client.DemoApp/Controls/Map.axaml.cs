@@ -8,6 +8,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
 using Mapsui;
 using Mapsui.Extensions;
 using Mapsui.Fetcher;
@@ -22,7 +23,7 @@ using ReactiveUI;
 
 namespace MavLink.Client.DemoApp.Controls;
 
-public partial class Map : UserControl
+public partial class Map : ReactiveUserControl<object>
 {
     public static readonly StyledProperty<ValueTuple<float, float>> CenterProperty =
         AvaloniaProperty.Register<Map, ValueTuple<float, float>>(nameof(Center), defaultValue: new ValueTuple<float, float>(0.0f,0.0f),
@@ -57,7 +58,13 @@ public partial class Map : UserControl
             }
         });
         Content = _mapControl;
-        this.WhenAnyValue(t => t.Center).Subscribe(t=>busPointProvider.SetVal((t.Item1, t.Item2)));
+
+        this.WhenActivated(d =>
+        {
+            this.WhenAnyValue(t => t.Center).Subscribe(t => busPointProvider.SetVal((t.Item1, t.Item2)))
+                .DisposeWith(d);
+        });
+        
     }
 }
 
@@ -73,26 +80,6 @@ internal sealed class BusPointProvider : MemoryProvider, IDynamic, IDisposable
         _previousCoordinates.Lon = point.Lon;
         OnDataChanged();
     }
-
-    // private readonly PeriodicTimer _timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
-    //
-    // public BusPointProvider()
-    // {
-    //     Catch.TaskRun(RunTimerAsync);
-    // }
-    //
-    // private (double Lon, double Lat) _previousCoordinates = (24.945831, 60.192059);
-    // private async Task RunTimerAsync()
-    // {
-    //     while (true)
-    //     {
-    //         await _timer.WaitForNextTickAsync();
-    //
-    //         _previousCoordinates = (_previousCoordinates.Lon + 0.00005, _previousCoordinates.Lat + 0.00005);
-    //
-    //         OnDataChanged();
-    //     }
-    // }
 
     void IDynamic.DataHasChanged()
     {

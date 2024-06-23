@@ -1,3 +1,4 @@
+using System;
 using MavLink.Client.DemoApp.Dialects;
 using MavLink.Client.DemoApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;

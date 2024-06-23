@@ -13,7 +13,6 @@ public class UdpTansport : IMavLinkTransport
         _endPoint = new IPEndPoint(IPAddress.Any, 0);
         _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         _socket.Bind(endPoint);
-
     }
 
     public int Receive(Span<byte> buffer)

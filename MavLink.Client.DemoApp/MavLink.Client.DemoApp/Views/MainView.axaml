@@ -23,7 +23,7 @@
         </controls:Map>        
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Button Command="{Binding SetCenter}">Set center</Button>
-            <TextBlock Text="{Binding MessageCounr, Mode=OneWay}"></TextBlock>
+            <!-- <TextBlock Text="{Binding MessageCounr, Mode=OneWay}"></TextBlock> -->
         </StackPanel>
     </Grid>
 

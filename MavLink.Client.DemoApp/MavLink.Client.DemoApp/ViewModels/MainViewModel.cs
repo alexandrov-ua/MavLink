@@ -7,7 +7,7 @@ using ReactiveUI;
 
 namespace MavLink.Client.DemoApp.ViewModels;
 
-public class MainViewModel : ViewModelBase, IDisposable
+public class MainViewModel : ViewModelBase, IActivatableViewModel
 {
     private ValueTuple<float, float> _center;
     private readonly MavLinkReactiveClient _client;
@@ -16,22 +16,19 @@ public class MainViewModel : ViewModelBase, IDisposable
     public MainViewModel(MavLinkReactiveClient client)
     {
         _client = client;
-        _t = _client.Subscribe(t =>
+        this.WhenActivated((CompositeDisposable disposable) =>
         {
-            if (t is TerrainCheckPocket tr)
+            _client.Subscribe(t =>
             {
-                Center = (tr.Payload.Lat, tr.Payload.Lon);
-                Console.WriteLine("set center");
-            }
-        });
+                if (t is TerrainCheckPocket tr)
+                {
+                    Center = (tr.Payload.Lat, tr.Payload.Lon);
+                    Console.WriteLine("set center");
+                }
+            }).DisposeWith(disposable);
 
-        // var t  = _client.OfType<TerrainDataPocket>().Subscribe(t =>
-        // {
-        //     Center = (t.Payload.Lat, t.Payload.Lon);
-        //     Console.WriteLine("Center");
-        // });
-        //
-        // _messageCount = _client.Count().ToProperty(this, t => t.MessageCounr);
+            //_messageCount = _client.Count().ToProperty(this, t=>t.MessageCounr).DisposeWith(disposable);
+        });
     }
     
     public ValueTuple<float, float> Center
@@ -40,19 +37,14 @@ public class MainViewModel : ViewModelBase, IDisposable
         set => this.RaiseAndSetIfChanged(ref _center, value);
     }
 
-    private ObservableAsPropertyHelper<int> _messageCount;
-    private readonly IDisposable _t;
-    public int MessageCounr => _messageCount.Value;
+    // private ObservableAsPropertyHelper<int> _messageCount;
+    // public int MessageCounr => _messageCount.Value;
 
     public void SetCenter()
     {
             Center = (Center.Item1 + 1, Center.Item2);
     }
+    
 
-
-    public void Dispose()
-    {
-        _client.Dispose();
-        _t.Dispose();
-    }
+    public ViewModelActivator Activator { get; } = new ViewModelActivator();
 }

@@ -21,4 +21,10 @@
     <ItemGroup>
         <ProjectReference Include="..\MavLink.Client.DemoApp\MavLink.Client.DemoApp.csproj"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <None Update="MavLink.Client.DemoApp.Desktop.entitlements">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>
