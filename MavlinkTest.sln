@@ -12,6 +12,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Client", "MavLink.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Client.TestApp", "MavLink.Client.TestApp\MavLink.Client.TestApp.csproj", "{55D5A2AB-00FE-46AD-98F7-99A1C0C3E94F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Client.DemoApp", "MavLink.Client.DemoApp\MavLink.Client.DemoApp\MavLink.Client.DemoApp.csproj", "{F6008451-9BE0-440A-831B-68FF66E4EA89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Client.DemoApp.Desktop", "MavLink.Client.DemoApp\MavLink.Client.DemoApp.Desktop\MavLink.Client.DemoApp.Desktop.csproj", "{A44F7FFE-5054-4629-B809-8D6893EB6E9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +46,13 @@ Global
 		{55D5A2AB-00FE-46AD-98F7-99A1C0C3E94F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55D5A2AB-00FE-46AD-98F7-99A1C0C3E94F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55D5A2AB-00FE-46AD-98F7-99A1C0C3E94F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6008451-9BE0-440A-831B-68FF66E4EA89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6008451-9BE0-440A-831B-68FF66E4EA89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6008451-9BE0-440A-831B-68FF66E4EA89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6008451-9BE0-440A-831B-68FF66E4EA89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A44F7FFE-5054-4629-B809-8D6893EB6E9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A44F7FFE-5054-4629-B809-8D6893EB6E9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A44F7FFE-5054-4629-B809-8D6893EB6E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A44F7FFE-5054-4629-B809-8D6893EB6E9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

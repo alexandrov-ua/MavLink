@@ -15,7 +15,7 @@ public class MavLinkClient : IMavLinkClient
     public static IMavLinkClient Create(string connectionString, IDialect dialect)
     {
         var hostAndPort = connectionString.Replace("udp://", "");
-        return new MavLinkClient(new UdpTansport(IPEndPoint.Parse(hostAndPort)), dialect);
+        return new MavLinkClient(new UdpTransport(IPEndPoint.Parse(hostAndPort)), dialect);
     }
 
     public MavLinkClient(IMavLinkTransport transport, IDialect dialect)

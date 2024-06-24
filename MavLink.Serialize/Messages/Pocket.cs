@@ -24,6 +24,6 @@ public abstract class Pocket<T> : IPocket<T> where T : IPayload
 
     public override string ToString()
     {
-        return $"{SequenceNumber},{IsMavlinkV2},{SystemId},{ComponentId},{(uint)MessageId},{MessageName}";
+        return $"{DateTime.MinValue},{IsMavlinkV2},{SystemId},{ComponentId},{(uint)MessageId},{MessageName}";
     }
 }

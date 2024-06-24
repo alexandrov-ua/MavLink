@@ -3,17 +3,16 @@ using System.Net.Sockets;
 
 namespace MavLink.Client.Transports;
 
-public class UdpTansport : IMavLinkTransport
+public class UdpTransport : IMavLinkTransport
 {
     private EndPoint _endPoint;
     private readonly Socket _socket;
 
-    public UdpTansport(EndPoint endPoint)
+    public UdpTransport(EndPoint endPoint)
     {
         _endPoint = new IPEndPoint(IPAddress.Any, 0);
         _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         _socket.Bind(endPoint);
-
     }
 
     public int Receive(Span<byte> buffer)

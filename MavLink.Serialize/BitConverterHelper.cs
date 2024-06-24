@@ -59,8 +59,8 @@ public static class BitConverterHelper
 
     public static string ReadString(int count, ref ReadOnlySpan<byte> span)
     {
-        var result = Encoding.ASCII.GetString(span.Slice(0,count)).TrimEnd('\0');
-        span = span.Slice(count);
+        var result = Encoding.ASCII.GetString(span.Slice(0,Math.Min(count, span.Length))).TrimEnd('\0');
+        span = span.Slice(Math.Min(count, span.Length));
         return result;
     }
     
