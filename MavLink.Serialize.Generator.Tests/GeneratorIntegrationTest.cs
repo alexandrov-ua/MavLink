@@ -4,22 +4,22 @@ using MavLink.Serialize.Dialects;
 
 namespace MavLink.Serialize.Generator.Tests;
 
-[Dialect("DialectXmls/minimal.xml")]
+[Dialect("minimal.xml")]
 public partial class MyMinimalDialect
 {
 }
 
-[Dialect("DialectXmls/standard.xml")]
+[Dialect("standard.xml")]
 public partial class MyStandardDialect
 {
 }
 
-[Dialect("DialectXmls/common.xml")]
+[Dialect("common.xml")]
 public partial class MyCommonDialect
 {
 }
 
-[Dialect("DialectXmls/ASLUAV.xml")]
+[Dialect("ASLUAV.xml")]
 public partial class MyAsluavDialect
 {
 }
@@ -40,7 +40,7 @@ public class GeneratorIntegrationTest
             0xfd, 0x09, 0x00, 0x00, 0x12, 0xff, 0xbe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x08, 0xc0, 0x04,
             0x03, 0x5d, 0xc6,
         };
-        var pocket = (HeartbeatPocket) MavlinkSerialize.Deserialize(buffer,
+        var pocket = (HeartbeatPocket)MavlinkSerialize.Deserialize(buffer,
             MyCommonDialect.Create(MyStandardDialect.Create(MyMinimalDialect.Create())));
 
         pocket.MessageId.Should().Be(0);
@@ -64,7 +64,7 @@ public class GeneratorIntegrationTest
             0xfd, 0x0c, 0x00, 0x00, 0x48, 0x01, 0x01, 0x02, 0x00, 0x00, 0x89, 0x66, 0xbb, 0xf2, 0xdc, 0x1a, 0x06, 0x00,
             0xa4, 0x50, 0x02, 0x01, 0x63, 0x58,
         };
-        var pocket = (SystemTimePocket) MavlinkSerialize.Deserialize(buffer,
+        var pocket = (SystemTimePocket)MavlinkSerialize.Deserialize(buffer,
             MyCommonDialect.Create(MyStandardDialect.Create(MyMinimalDialect.Create())));
 
         pocket.Payload.TimeBootMs.Should().Be(16928932);
@@ -79,12 +79,12 @@ public class GeneratorIntegrationTest
             0xfd, 0x10, 0x00, 0x00, 0x6b, 0x01, 0x01, 0x01, 0x00, 0x00, 0x2f, 0xfc, 0x71, 0x53, 0x2f, 0xfc, 0x61, 0x52,
             0x2f, 0xfc, 0x71, 0x57, 0x00, 0x00, 0x38, 0x31, 0x83, 0x3d,
         };
-        var pocket = (SysStatusPocket) MavlinkSerialize.Deserialize(buffer,
+        var pocket = (SysStatusPocket)MavlinkSerialize.Deserialize(buffer,
             MyCommonDialect.Create(MyStandardDialect.Create(MyMinimalDialect.Create())));
 
-        pocket.Payload.OnboardControlSensorsPresent.Should().Be((MavSysStatusSensor) 0x5371fc2f);
-        pocket.Payload.OnboardControlSensorsEnabled.Should().Be((MavSysStatusSensor) 0x5261fc2f);
-        pocket.Payload.OnboardControlSensorsHealth.Should().Be((MavSysStatusSensor) 0x5771fc2f);
+        pocket.Payload.OnboardControlSensorsPresent.Should().Be((MavSysStatusSensor)0x5371fc2f);
+        pocket.Payload.OnboardControlSensorsEnabled.Should().Be((MavSysStatusSensor)0x5261fc2f);
+        pocket.Payload.OnboardControlSensorsHealth.Should().Be((MavSysStatusSensor)0x5771fc2f);
         pocket.Payload.Load.Should().Be(0);
         pocket.Payload.VoltageBattery.Should().Be(12600);
         pocket.Payload.CurrentBattery.Should().Be(0);
@@ -106,7 +106,7 @@ public class GeneratorIntegrationTest
             0x13, 0xcf, 0x87, 0x3a, 0x58, 0xe2, 0xd4, 0xbd, 0xb8, 0xd9, 0xac, 0x39, 0xc0, 0xda, 0xa5, 0x39, 0x84, 0x32,
             0x4f, 0x3a, 0x80, 0xc3,
         };
-        var pocket = (AttitudePocket) MavlinkSerialize.Deserialize(buffer,
+        var pocket = (AttitudePocket)MavlinkSerialize.Deserialize(buffer,
             MyCommonDialect.Create(MyStandardDialect.Create(MyMinimalDialect.Create())));
     }
 
@@ -120,7 +120,7 @@ public class GeneratorIntegrationTest
             0x53, 0x54, 0x41, 0x54, 0x5f, 0x52, 0x55, 0x4e, 0x54, 0x49, 0x4d, 0x45, 0x00, 0x00, 0x00, 0x00, 0x06, 0xc7,
             0x87,
         };
-        var pocket = (ParamValuePocket) MavlinkSerialize.Deserialize(buffer,
+        var pocket = (ParamValuePocket)MavlinkSerialize.Deserialize(buffer,
             MyCommonDialect.Create(MyStandardDialect.Create(MyMinimalDialect.Create())));
 
         pocket.Payload.ParamId.Should().Be("STAT_RUNTIME");

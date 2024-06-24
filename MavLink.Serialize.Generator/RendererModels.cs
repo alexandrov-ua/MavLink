@@ -1,3 +1,7 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+
 namespace MavLink.Serialize.Generator;
 
 public record RootRenderModel(
@@ -99,7 +103,7 @@ public record TypeRenderModel(string OriginalType, string CsType, int Size, byte
     {
         type = type.Replace("_mavlink_version", "");
         var arraySize = GetArraySize(type);
-        type = type.Split("[").First();
+        type = type.Split('[').First();
         return GetCsType(type, arraySize, @enum);
     }
 

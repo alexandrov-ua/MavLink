@@ -13,7 +13,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MavLink.Serialize.Generator.Tests\MavLink.Serialize.Generator.Tests.csproj" />
-      <ProjectReference Include="..\MavLink.Serialize.Tests\MavLink.Serialize.Tests.csproj" />
     </ItemGroup>
 
 </Project>

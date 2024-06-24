@@ -1,12 +1,15 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace MavLink.Serialize.Generator;
 
 public static class DialectXmlParser
 {
-    public static RootDefinition Parse(string fileName)
+    public static RootDefinition Parse(Stream stream)
     {
-        var document = XDocument.Load(fileName);
+        var document = XDocument.Load(stream);
         
         var mavlink = document.Element("mavlink");
         var version = mavlink?.Element("version")?.Value ?? "";

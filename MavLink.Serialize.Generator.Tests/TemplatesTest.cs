@@ -25,31 +25,36 @@ public class TemplatesTest
             new List<MessageRenderModel>()
             {
                 new MessageRenderModel(
-                    "HEARTBEAT", 
-                    0, 
+                    "HEARTBEAT",
+                    0,
                     "The heartbeat message shows that a system or component is present and responding. The type and autopilot fields (along with the message component id),",
                     new List<MessageItemRenderModel>()
                     {
-                        new MessageItemRenderModel("type", new TypeRenderModel("uint8_t", "byte", 1,null, null),""),
-                        new MessageItemRenderModel("custom_mode", new TypeRenderModel("uint32_t", "uint", 4,null, null),""),
+                        new MessageItemRenderModel("type", new TypeRenderModel("uint8_t", "byte", 1, null, null), ""),
+                        new MessageItemRenderModel("custom_mode",
+                            new TypeRenderModel("uint32_t", "uint", 4, null, null), ""),
                     }, null),
                 new MessageRenderModel(
-                    "PROTOCOL_VERSION", 
-                    300, 
+                    "PROTOCOL_VERSION",
+                    300,
                     "The heartbeat message shows that a system or component is present and responding. The type and autopilot fields (along with the message component id),",
                     new List<MessageItemRenderModel>()
                     {
-                        new MessageItemRenderModel("version", new TypeRenderModel("uint16_t", "ushort", 2,10, null),""),
-                        new MessageItemRenderModel("custom_mode", new TypeRenderModel("uint32_t", "uint", 4,null, null),""),
+                        new MessageItemRenderModel("version", new TypeRenderModel("uint16_t", "ushort", 2, 10, null),
+                            ""),
+                        new MessageItemRenderModel("custom_mode",
+                            new TypeRenderModel("uint32_t", "uint", 4, null, null), ""),
                     }, null),
                 new MessageRenderModel(
-                    "PROTOCOL_VERSION1", 
-                    301, 
+                    "PROTOCOL_VERSION1",
+                    301,
                     "The heartbeat message shows that a system or component is present and responding. The type and autopilot fields (along with the message component id),",
                     new List<MessageItemRenderModel>()
                     {
-                        new MessageItemRenderModel("version", new TypeRenderModel("uint16_t", "ushort", 2,null, "MAV_AUTOPILOT"),""),
-                        new MessageItemRenderModel("custom_mode", new TypeRenderModel("uint32_t", "uint", 4,null, null),""),
+                        new MessageItemRenderModel("version",
+                            new TypeRenderModel("uint16_t", "ushort", 2, null, "MAV_AUTOPILOT"), ""),
+                        new MessageItemRenderModel("custom_mode",
+                            new TypeRenderModel("uint32_t", "uint", 4, null, null), ""),
                     }, null),
             },
             new List<EnumRenderModel>()
@@ -74,10 +79,10 @@ public class TemplatesTest
 
         var text = TemplateHelper.RenderTemplate(model);
 
-        
+
         _testOutputHelper.WriteLine(text);
     }
-    
+
     [Fact]
     public void Smoke2()
     {
@@ -94,7 +99,7 @@ public class TemplatesTest
 
         var text = TemplateHelper.RenderTemplate(model);
 
-        
+
         _testOutputHelper.WriteLine(text);
     }
 
