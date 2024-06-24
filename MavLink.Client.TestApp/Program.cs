@@ -4,7 +4,7 @@ using MavLink.Client.TestApp.Dialects;
 
 
 using var client =
-    new MavLinkReactiveClient(MavLinkClient.Create(args.FirstOrDefault() ?? "udp://127.0.0.1:14550",
+    new MavLinkReactiveClient(MavLinkClient.Create(args.FirstOrDefault() ?? "udp://0.0.0.0:14555",
         ArduPilotMegaDialect.Default));
 
 using var _ = client.GroupBy(t => t.MessageName)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mapsui.Providers.Wfs.Utilities;
 using MavLink.Client.DemoApp.Dialects;
 using ReactiveUI;
 
@@ -9,7 +8,7 @@ namespace MavLink.Client.DemoApp.ViewModels;
 
 public class MainViewModel : ViewModelBase, IActivatableViewModel
 {
-    private ValueTuple<float, float> _center;
+    private VehiclePosition _position;
     private readonly MavLinkReactiveClient _client;
 
 
@@ -18,33 +17,23 @@ public class MainViewModel : ViewModelBase, IActivatableViewModel
         _client = client;
         this.WhenActivated((CompositeDisposable disposable) =>
         {
-            _client.Subscribe(t =>
+            _client.OfType<GlobalPositionIntPocket>().Subscribe(t =>
             {
-                if (t is TerrainCheckPocket tr)
-                {
-                    Center = (tr.Payload.Lat, tr.Payload.Lon);
-                    Console.WriteLine("set center");
-                }
+                var payload = t.Payload;
+                Position = new VehiclePosition(
+                    payload.Lon / 10000000d, 
+                    payload.Lat / 10000000d, 
+                    payload.Alt / 1000d,
+                    payload.Hdg / 100d);
             }).DisposeWith(disposable);
-
-            //_messageCount = _client.Count().ToProperty(this, t=>t.MessageCounr).DisposeWith(disposable);
         });
     }
-    
-    public ValueTuple<float, float> Center
-    {
-        get => _center;
-        set => this.RaiseAndSetIfChanged(ref _center, value);
-    }
 
-    // private ObservableAsPropertyHelper<int> _messageCount;
-    // public int MessageCounr => _messageCount.Value;
-
-    public void SetCenter()
+    public VehiclePosition Position
     {
-            Center = (Center.Item1 + 1, Center.Item2);
+        get => _position;
+        set => this.RaiseAndSetIfChanged(ref _position, value);
     }
-    
 
     public ViewModelActivator Activator { get; } = new ViewModelActivator();
 }

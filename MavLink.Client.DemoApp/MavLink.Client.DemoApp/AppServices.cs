@@ -12,7 +12,7 @@ public static class AppServices
         collection.AddTransient<MainViewModel>();
         
         var client = new MavLinkReactiveClient(MavLinkClient.Create(
-            "udp://127.0.0.1:14550",
+            "udp://0.0.0.0:14555",
             ArduPilotMegaDialect.Default));
         collection.AddSingleton<MavLinkReactiveClient>(client);
     }

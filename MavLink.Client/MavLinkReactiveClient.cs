@@ -6,7 +6,7 @@ using MavLink.Serialize.Messages;
 
 namespace MavLink.Client;
 
-public class MavLinkReactiveClient : IObservable<IPocket<IPayload>> , IDisposable
+public class MavLinkReactiveClient : IObservable<IPocket<IPayload>>, IDisposable
 {
     private readonly IMavLinkClient _mavLinkClient;
     private readonly IObservable<IPocket<IPayload>> _receivedEvents;

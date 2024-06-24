@@ -14,16 +14,11 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainViewModel />
     </Design.DataContext>
-    <Interaction.Behaviors>
-        <demoApp:DisposeBehavior />
-    </Interaction.Behaviors>
     <Grid RowDefinitions="*, auto">
-        <controls:Map Grid.Row="0" Center="{Binding Center}">
+        <controls:Map Grid.Row="0" Center="{Binding Position}">
         
         </controls:Map>        
         <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button Command="{Binding SetCenter}">Set center</Button>
-            <!-- <TextBlock Text="{Binding MessageCounr, Mode=OneWay}"></TextBlock> -->
         </StackPanel>
     </Grid>
 
