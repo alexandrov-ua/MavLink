@@ -223,4 +223,22 @@ public class MavlinkSerializeDeserialize
 
         Assert.Equal(concretePocket.Payload.Data, mavgenConcretePocket.data);
     }
+    
+    [Fact]
+    public void RadioStatusV1()
+    {
+        var data = new byte[]
+        {
+            0xfe, 0x09, 0x9b, 0x33, 0x44, 0x6d, 0x00, 0x00, 0x00, 0x00, 0x5f, 0x64, 0x00, 0x00, 0x00, 0x0f, 0x14, 
+        };
+
+        var pocket = (RadioStatusPocket)MavlinkSerialize.Deserialize(data, TestDialect.Default);
+        pocket.IsMavlinkV2.Should().Be(false);
+        pocket.SequenceNumber.Should().Be(155);
+        pocket.SystemId.Should().Be(51);
+        pocket.ComponentId.Should().Be(68);
+        pocket.Payload.Rssi.Should().Be(95);
+        pocket.Payload.Remrssi.Should().Be(100);
+
+    }
 }

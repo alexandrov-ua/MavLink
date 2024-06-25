@@ -10,7 +10,7 @@ using var client =
 using var _ = client.GroupBy(t => t.MessageName)
     .Select(t => t.TimeInterval())
     .SelectMany(t => t)
-    .Buffer(TimeSpan.FromSeconds(1))
+    .Buffer(TimeSpan.FromSeconds(3))
     .Subscribe((t) =>
     {
         Console.Clear();
@@ -25,7 +25,7 @@ using var _ = client.GroupBy(t => t.MessageName)
                      .OrderBy(t => t.Count))
         {
             Console.WriteLine(
-                $"{i.Value.MessageName,40}{i.Value.MessageId,10}{i.Count,10}{(1000 / i.Avg).ToString("F"),20} Hz");
+                $"{i.Value.MessageName,-35}{(i.Value.IsMavlinkV2 ? "V2" : "V1"), -5}{i.Value.MessageId,-10}{i.Count,-10}{(1000 / i.Avg).ToString("F") + " Hz",-20}");
         }
 
         Console.WriteLine();

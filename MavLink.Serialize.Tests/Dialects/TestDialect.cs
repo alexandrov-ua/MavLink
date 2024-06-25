@@ -20,6 +20,8 @@ public class TestDialect : IDialect
                 CommandIntPayload.Deserialize(payload)),
             30 => new AttitudePocket(isMavlinkV2, sequenceNumber, systemId, componentId,
                 AttitudePayload.Deserialize(payload)),
+            109 => new RadioStatusPocket(isMavlinkV2, sequenceNumber, systemId, componentId,
+                RadioStatusPayload.Deserialize(payload)),
             110 => new FileTransferProtocolPocket(isMavlinkV2, sequenceNumber, systemId, componentId,
                 FileTransferProtocolPayload.Deserialize(payload)),
             134 => new TerrainDataPocket(isMavlinkV2, sequenceNumber, systemId, componentId,
@@ -411,6 +413,84 @@ public class TerrainDataPayload : IPayload<TerrainDataPayload>, IPayload
     }
 
     public int GetMaxByteSize() => 43;
+}
+
+public class RadioStatusPocket : Pocket<RadioStatusPayload>
+{
+    public RadioStatusPocket(bool isMavlink2, byte sequenceNumber, byte systemId, byte componentId,
+        RadioStatusPayload payload) : base(isMavlink2, sequenceNumber, systemId, componentId, payload)
+    {
+    }
+
+    public override uint MessageId => 109;
+    public override string MessageName => "RADIO_STATUS";
+    public override int GetMaxByteSize() => Payload.GetMaxByteSize() + 12;
+
+    public override byte GetChecksumExtra() => 185;
+}
+
+public class RadioStatusPayload : IPayload<RadioStatusPayload>, IPayload
+{
+    /// <summary>
+    /// Count of radio packet receive errors (since boot).
+    /// </summary>
+    public ushort Rxerrors { get; init; }
+    /// <summary>
+    /// Count of error corrected radio packets (since boot).
+    /// </summary>
+    public ushort Fixed { get; init; }
+    /// <summary>
+    /// Local (message sender) received signal strength indication in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.
+    /// </summary>
+    public byte Rssi { get; init; }
+    /// <summary>
+    /// Remote (message receiver) signal strength indication in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.
+    /// </summary>
+    public byte Remrssi { get; init; }
+    /// <summary>
+    /// Remaining free transmitter buffer space.
+    /// </summary>
+    public byte Txbuf { get; init; }
+    /// <summary>
+    /// Local background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], UINT8_MAX: invalid/unknown.
+    /// </summary>
+    public byte Noise { get; init; }
+    /// <summary>
+    /// Remote background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], UINT8_MAX: invalid/unknown.
+    /// </summary>
+    public byte Remnoise { get; init; }
+
+    public static RadioStatusPayload Deserialize(ReadOnlySpan<byte> span)
+    {
+        var payload = new RadioStatusPayload(){
+            Rxerrors = BitConverterHelper.Read<ushort>(ref span),
+            Fixed = BitConverterHelper.Read<ushort>(ref span),
+            Rssi = BitConverterHelper.Read<byte>(ref span),
+            Remrssi = BitConverterHelper.Read<byte>(ref span),
+            Txbuf = BitConverterHelper.Read<byte>(ref span),
+            Noise = BitConverterHelper.Read<byte>(ref span),
+            Remnoise = BitConverterHelper.Read<byte>(ref span),
+        };
+        return payload;
+    }
+
+    public static void Serialize(RadioStatusPayload payload, Span<byte> span)
+    {
+        payload.Serialize(span);
+    }
+
+    public void Serialize(Span<byte> span)
+    {
+        BitConverterHelper.Write(Rxerrors, ref span);
+        BitConverterHelper.Write(Fixed, ref span);
+        BitConverterHelper.Write(Rssi, ref span);
+        BitConverterHelper.Write(Remrssi, ref span);
+        BitConverterHelper.Write(Txbuf, ref span);
+        BitConverterHelper.Write(Noise, ref span);
+        BitConverterHelper.Write(Remnoise, ref span);
+    }
+
+    public int GetMaxByteSize() => 9;
 }
 
 #endregion

@@ -161,7 +161,28 @@ public class MavlinkSerializeSerialize
             0x00, 0x00, 0x01, 0x00, 0x02, 0x00, 0x03, 0x00, 0x04, 0x00, 0x05, 0x00, 0x06, 0x00, 0x07, 0x00, 0x08, 0x00,
             0x09, 0x00, 0x0A, 0x00, 0x0B, 0x00, 0x0C, 0x00, 0x0D, 0x00, 0x0E, 0x00, 0x0F, 0xA7, 0x73
         };
-        Assert.Equal(buffer.Slice(0, n).ToArray(), expected.ToArray());
+        Assert.Equal(expected.ToArray(), buffer.Slice(0, n).ToArray());
+    }
+    
+    [Fact]
+    public void RadioStatusV1()
+    {
+        var pocket = new RadioStatusPocket(false, 155, 51, 68,
+            new RadioStatusPayload
+            {
+                Rssi = 95,
+                Remrssi = 100
+            }
+        );
+
+        Span<byte> buffer = new byte[pocket.GetMaxByteSize()];
+        MavlinkSerialize.Serialize(pocket, buffer, out var n);
+
+        Span<byte> expected = new byte[]
+        {
+            0xfe, 0x09, 0x9b, 0x33, 0x44, 0x6d, 0x00, 0x00, 0x00, 0x00, 0x5f, 0x64, 0x00, 0x00, 0x00, 0x0f, 0x14
+        };
+        Assert.Equal(expected.ToArray(), buffer.Slice(0, n).ToArray());
     }
 
     public string FormatBytes(ReadOnlySpan<byte> span)
