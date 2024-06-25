@@ -38,7 +38,8 @@ public class DialectXmlParserTest
         var values =
             mavlink.Element("enums")!
                 .Elements("enum")
-                .SelectMany(t => t.Elements("entry")).Select(q=>uint.Parse(q.Attribute("value")?.Value ?? "0")).ToList();
+                .SelectMany(t => t.Elements("entry")).Select(q => uint.Parse(q.Attribute("value")?.Value ?? "0"))
+                .ToList();
         _testOutputHelper.WriteLine(string.Join(" ", values.Select(t => t.ToString())));
     }
 
@@ -60,5 +61,4 @@ public class DialectXmlParserTest
                 .Distinct().Order().ToList();
         _testOutputHelper.WriteLine(string.Join("\n", types));
     }
-
 }

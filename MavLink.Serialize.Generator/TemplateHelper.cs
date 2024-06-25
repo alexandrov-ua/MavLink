@@ -1,4 +1,5 @@
-using MavLink.Serialize.Messages;
+using System.IO;
+using System.Linq;
 using Scriban;
 using Scriban.Runtime;
 
@@ -25,7 +26,7 @@ internal static class TemplateHelper
 
     private static string GetResource(string name)
     {
-        using (Stream stream = typeof(IPayload).Assembly.GetManifestResourceStream(name))
+        using (Stream stream = typeof(TemplateHelper).Assembly.GetManifestResourceStream(name))
         using (StreamReader reader = new StreamReader(stream))
         {
             return reader.ReadToEnd();

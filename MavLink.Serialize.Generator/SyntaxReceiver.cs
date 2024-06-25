@@ -1,4 +1,5 @@
-using MavLink.Serialize.Dialects;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -20,7 +21,7 @@ internal class SyntaxReceiver : ISyntaxContextReceiver
             
             var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
             var attributeData = classSymbol?.GetAttributes()
-                .FirstOrDefault(ad => ad.AttributeClass?.ToDisplayString() == typeof(DialectAttribute).FullName);
+                .FirstOrDefault(ad => ad.AttributeClass?.ToDisplayString() == "MavLink.Serialize.Dialects.DialectAttribute" /*typeof(DialectAttribute).FullName*/);
             var filePath = attributeData?.ConstructorArguments.FirstOrDefault().Value as string;
             var sourceFilePath = context.SemanticModel.SyntaxTree.FilePath;
             Roots.Add(new ClassNodeInfo(

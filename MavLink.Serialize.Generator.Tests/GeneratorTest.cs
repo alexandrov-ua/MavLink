@@ -21,138 +21,139 @@ public class DialectGeneratorTest
     {
         var (output, diagnostics) = _generatorTestHelper.GetGeneratedOutput(
             """
-            using MavLink.Serialize.Dialects;
-            
-            namespace MavLink.Tests;
-            
-            
-            [Dialect("DialectXmls/minimal.xml")]
-            public partial class MinimalDialect
-            {
-                
-            }  
-            """);
+             using MavLink.Serialize.Dialects;
+             
+             namespace MavLink.Tests;
+             
+             
+             [Dialect("minimal.xml")]
+             public partial class MinimalDialect
+             {
+                 
+             }  
+             """);
 
-        diagnostics.Where(t=>t.Severity > DiagnosticSeverity.Warning).Should().BeEmpty();
+        diagnostics.Where(t => t.Severity > DiagnosticSeverity.Warning).Should().BeEmpty();
         _testOutputHelper.WriteLine(output);
     }
-    
+
     [Fact]
     public void Positive1()
     {
         var (output, diagnostics) = _generatorTestHelper.GetGeneratedOutput(
             """
-            using MavLink.Serialize.Dialects;
+             using MavLink.Serialize.Dialects;
 
-            namespace MavLink.Tests;
+             namespace MavLink.Tests;
 
-            [Dialect("DialectXmls/minimal.xml")]
-            public partial class MinimalDialect
-            {
-                
-            }
-            
-            [Dialect("DialectXmls/common.xml")]
-            public partial class CommonDialect
-            {
-                
-            }
-            """);
+             [Dialect("minimal.xml")]
+             public partial class MinimalDialect
+             {
+                 
+             }
+             
+             [Dialect("common.xml")]
+             public partial class CommonDialect
+             {
+                 
+             }
+             """);
 
-        diagnostics.Where(t=>t.Severity > DiagnosticSeverity.Warning).Should().BeEmpty();
+        diagnostics.Where(t => t.Severity > DiagnosticSeverity.Warning).Should().BeEmpty();
         _testOutputHelper.WriteLine(output);
     }
-    
+
     [Fact]
     public void Positive2()
     {
         var (output, diagnostics) = _generatorTestHelper.GetGeneratedOutput(
             """
-            using MavLink.Serialize.Dialects;
+             using MavLink.Serialize.Dialects;
 
-            namespace MavLink.Tests;
+             namespace MavLink.Tests;
 
-            [Dialect("DialectXmls/minimal.xml")]
-            public partial class MinimalDialect
-            {
-                
-            }
+             [Dialect("minimal.xml")]
+             public partial class MinimalDialect
+             {
+                 
+             }
 
-            [Dialect("DialectXmls/common.xml")]
-            public partial class CommonDialect
-            {
-                
-            }
-            
-            [Dialect("DialectXmls/cubepilot.xml")]
-            public partial class CubepilotDialect
-            {
-                
-            }
-            """);
+             [Dialect("common.xml")]
+             public partial class CommonDialect
+             {
+                 
+             }
+             
+             [Dialect("cubepilot.xml")]
+             public partial class CubepilotDialect
+             {
+                 
+             }
+             """);
 
-        diagnostics.Where(t=>t.Severity > DiagnosticSeverity.Warning).Should().BeEmpty();
+        diagnostics.Where(t => t.Severity > DiagnosticSeverity.Warning).Should().BeEmpty();
         _testOutputHelper.WriteLine(output);
     }
-    
+
     [Fact]
     public void Negative()
     {
         var (output, diagnostics) = _generatorTestHelper.GetGeneratedOutput(
             """
-            namespace MavLink.Tests;
+             namespace MavLink.Tests;
 
 
-            [Dialect("DialectXmls/minimal.xml")]
-            public partial class MinimalDialect
-            {
-                
-            }
-            """);
+             [Dialect("DialectXmls/minimal.xml")]
+             public partial class MinimalDialect
+             {
+                 
+             }
+             """);
 
         diagnostics.Should().Contain(t => t.Id == "CS0246");
         _testOutputHelper.WriteLine(output);
     }
-    
+
     [Fact]
     public void Negative2()
     {
         var (output, diagnostics) = _generatorTestHelper.GetGeneratedOutput(
             """
-            using MavLink.Serialize.Dialects;
-            
-            namespace MavLink.Tests;
+             using MavLink.Serialize.Dialects;
+             
+             namespace MavLink.Tests;
 
 
-            [Dialect("DialectXmls/minimal.xml")]
-            public partial class MinimalDialect
-            {
-                sdfsdfdssd
-            }
-            """);
+             [Dialect("DialectXmls/minimal.xml")]
+             public partial class MinimalDialect
+             {
+                 sdfsdfdssd
+             }
+             """);
 
         diagnostics.Should().Contain(t => t.Id == "CS1519");
         _testOutputHelper.WriteLine(output);
     }
-    
+
     [Fact]
     public void Negative3()
     {
         var (output, diagnostics) = _generatorTestHelper.GetGeneratedOutput(
             """
-            using MavLink.Serialize.Dialects;
+             using MavLink.Serialize.Dialects;
 
-            namespace MavLink.Tests;
+             namespace MavLink.Tests;
 
 
-            [Dialect("fkdjgdfkjghk.xml")]
-            public partial class MinimalDialect
-            {
-                sdfsdfdssd
-            }
-            """);
+             [Dialect("fkdjgdfkjghk.xml")]
+             public partial class MinimalDialect
+             {
+                 sdfsdfdssd
+             }
+             """);
 
         diagnostics.Should().Contain(t => t.Id == "mavlink02");
         _testOutputHelper.WriteLine(output);
     }
 }
+

@@ -1,8 +1,12 @@
+using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using System.Linq;
 using Scriban.Runtime;
 
 [assembly:InternalsVisibleTo("MavLink.Serialize.Generator.Tests")]
@@ -22,23 +26,25 @@ public class DialectGenerator : ISourceGenerator
     {
         if (context.SyntaxContextReceiver is SyntaxReceiver receiver)
         {
+            var filesDictionary = context.AdditionalFiles
+                .Where(at => at.Path.EndsWith(".xml"))
+                .ToDictionary(k => Path.GetFileName(k.Path), v=>v);
             foreach (var root in receiver.Roots)
             {
                 try
                 {
-                    var finalPath = Path.Combine(Path.GetDirectoryName(root.SourceFilePath) ?? "", root.FilePath);
-                    if (!Path.Exists(finalPath))
-                    {
+                     if (!filesDictionary.ContainsKey(Path.GetFileName(root.FilePath)))
+                     {
                         context.ReportDiagnostic(Diagnostic.Create(
                             new DiagnosticDescriptor("mavlink02", "File doesn't exists", "File {0} doesn't exists", "category", DiagnosticSeverity.Error, true),
-                            root.Symbol.Locations.First(), finalPath
+                            root.Symbol.Locations.First(), root.FilePath
                         ));
                         continue;
                     }
 
 
-
-                    var definition = DialectXmlParser.Parse(finalPath);
+                    var fileText = filesDictionary[root.FilePath].GetText(CancellationToken.None);
+                    var definition = DialectXmlParser.Parse(new MemoryStream(Encoding.UTF8.GetBytes(fileText.ToString())));
 
                     var model = RootRenderModel.CreateFromDefinition(definition, root);
 

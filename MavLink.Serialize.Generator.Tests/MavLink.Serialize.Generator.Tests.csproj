@@ -10,45 +10,48 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="6.0.0"/>
+        <PackageReference Include="coverlet.collector" Version="6.0.0" />
         <PackageReference Include="FluentAssertions" Version="6.12.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
-        <PackageReference Include="xunit" Version="2.5.3"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+        <PackageReference Include="xunit" Version="2.5.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit"/>
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <ProjectReference Include="..\MavLink.Serialize\MavLink.Serialize.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true"/>
+        <Using Include="Xunit" />
     </ItemGroup>
 
 
     <ItemGroup>
-      <None Remove="DialectXmls\common.xml" />
-      <Content Include="DialectXmls\common.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Remove="DialectXmls\minimal.xml" />
-      <Content Include="DialectXmls\minimal.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Remove="DialectXmls\standard.xml" />
-      <Content Include="DialectXmls\standard.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Remove="DialectXmls\ASLUAV.xml" />
-      <Content Include="DialectXmls\ASLUAV.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Remove="DialectXmls\cubepilot.xml" />
-      <Content Include="DialectXmls\cubepilot.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+        <ProjectReference Include="..\MavLink.Serialize.Tests\MavLink.Serialize.Tests.csproj" />
+        <ProjectReference Include="..\MavLink.Serialize\MavLink.Serialize.csproj" />
+        <ProjectReference Include="..\MavLink.Serialize.Generator\MavLink.Serialize.Generator.csproj"
+                          OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <None Remove="DialectXmls\common.xml" />
+        <AdditionalFiles Include="DialectXmls\common.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </AdditionalFiles>
+        <None Remove="DialectXmls\minimal.xml" />
+        <AdditionalFiles Include="DialectXmls\minimal.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </AdditionalFiles>
+        <None Remove="DialectXmls\standard.xml" />
+        <AdditionalFiles Include="DialectXmls\standard.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </AdditionalFiles>
+        <None Remove="DialectXmls\ASLUAV.xml" />
+        <AdditionalFiles Include="DialectXmls\ASLUAV.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </AdditionalFiles>
+        <None Remove="DialectXmls\cubepilot.xml" />
+        <AdditionalFiles Include="DialectXmls\cubepilot.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </AdditionalFiles>
     </ItemGroup>
 
 </Project>
