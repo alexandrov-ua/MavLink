@@ -4,7 +4,7 @@ using MavLink.Client.TestApp.Dialects;
 
 
 using var client =
-    new MavLinkReactiveClient(MavLinkClient.Create(args.FirstOrDefault() ?? "udp://0.0.0.0:14555",
+    new MavLinkReactiveClient(MavLinkClient.Create(args.FirstOrDefault() ?? "udp://0.0.0.0:14550",
         ArduPilotMegaDialect.Default));
 
 using var _ = client.GroupBy(t => t.MessageName)
@@ -14,6 +14,8 @@ using var _ = client.GroupBy(t => t.MessageName)
     .Subscribe((t) =>
     {
         Console.Clear();
+        Console.WriteLine(
+            $"{"MessageName",-35}{"Version", -10}{"MsgId",-10}{"Count(3s)",-10}{"Frequency",-20}");
         Console.WriteLine("====================================");
         foreach (var i in t.GroupBy(z => z.Value.MessageName)
                      .Select(z => new
@@ -25,7 +27,7 @@ using var _ = client.GroupBy(t => t.MessageName)
                      .OrderBy(t => t.Count))
         {
             Console.WriteLine(
-                $"{i.Value.MessageName,-35}{(i.Value.IsMavlinkV2 ? "V2" : "V1"), -5}{i.Value.MessageId,-10}{i.Count,-10}{(1000 / i.Avg).ToString("F") + " Hz",-20}");
+                $"{i.Value.MessageName,-35}{(i.Value.IsMavlinkV2 ? "V2" : "V1"), -10}{i.Value.MessageId,-10}{i.Count,-10}{(1000 / i.Avg).ToString("F") + " Hz",-20}");
         }
 
         Console.WriteLine();
