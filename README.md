@@ -66,6 +66,7 @@ NOTE: `OutputItemType="Analyzer" ReferenceOutputAssembly="true"` is important
         <AdditionalFiles Include="Dialects\minimal.xml"/>
     </ItemGroup>
 ```
+
 3. Create dialect class in your project
 ```CSharp
 using MavLink.Serialize.Dialects;
@@ -77,6 +78,7 @@ public partial class MyMinimalDialect
 }
 ```
 NOTE: all models will be generated in the same namespace with MyMinimalDialect class
+
 4. Use this dialest with the client:
 ```CSharp
 using var client = MavLinkClient.Create("udp://0.0.0.0:14550", MyMinimalDialect.Default);
