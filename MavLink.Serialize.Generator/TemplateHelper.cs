@@ -26,7 +26,7 @@ internal static class TemplateHelper
 
     private static string GetResource(string name)
     {
-        using (Stream stream = typeof(TemplateHelper).Assembly.GetManifestResourceStream(name))
+        using (Stream stream = typeof(TemplateHelper).Assembly.GetManifestResourceStream(name)!)
         using (StreamReader reader = new StreamReader(stream))
         {
             return reader.ReadToEnd();

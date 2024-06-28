@@ -3,9 +3,13 @@ namespace MavLink.Serialize.Dialects;
 [AttributeUsage(AttributeTargets.Class)]
 public class DialectAttribute : Attribute
 {
-    public DialectAttribute(string filePath)
+    /// <summary>
+    /// Indicates class to generate IDialect realization
+    /// </summary>
+    /// <param name="fileName">File name added as AdditionalFiles</param>
+    public DialectAttribute(string fileName)
     {
-        FilePath = filePath;
+        FileName = fileName;
     }
-    public string FilePath { get; }
+    public string FileName { get; }
 }

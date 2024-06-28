@@ -9,7 +9,8 @@ using Microsoft.CodeAnalysis.Text;
 using System.Linq;
 using Scriban.Runtime;
 
-[assembly:InternalsVisibleTo("MavLink.Serialize.Generator.Tests")]
+[assembly: InternalsVisibleTo("MavLink.Serialize.Generator.Tests")]
+
 namespace MavLink.Serialize.Generator;
 
 [Generator]
@@ -28,23 +29,26 @@ public class DialectGenerator : ISourceGenerator
         {
             var filesDictionary = context.AdditionalFiles
                 .Where(at => at.Path.EndsWith(".xml"))
-                .ToDictionary(k => Path.GetFileName(k.Path), v=>v);
+                .ToDictionary(k => Path.GetFileName(k.Path), v => v);
             foreach (var root in receiver.Roots)
             {
                 try
                 {
-                     if (!filesDictionary.ContainsKey(Path.GetFileName(root.FilePath)))
-                     {
+                    if (!filesDictionary.ContainsKey(Path.GetFileName(root.FileName)))
+                    {
                         context.ReportDiagnostic(Diagnostic.Create(
-                            new DiagnosticDescriptor("mavlink02", "File doesn't exists", "File {0} doesn't exists", "category", DiagnosticSeverity.Error, true),
-                            root.Symbol.Locations.First(), root.FilePath
+                            new DiagnosticDescriptor("mavlink02", "File doesn't exists",
+                                "Can't find {0} file. Consider add it in the project and mark it as AdditionalFile",
+                                "category", DiagnosticSeverity.Error, true),
+                            root.Symbol.Locations.First(), root.FileName
                         ));
                         continue;
                     }
 
 
-                    var fileText = filesDictionary[root.FilePath].GetText(CancellationToken.None);
-                    var definition = DialectXmlParser.Parse(new MemoryStream(Encoding.UTF8.GetBytes(fileText.ToString())));
+                    var fileText = filesDictionary[root.FileName].GetText(CancellationToken.None);
+                    var definition =
+                        DialectXmlParser.Parse(new MemoryStream(Encoding.UTF8.GetBytes(fileText.ToString())));
 
                     var model = RootRenderModel.CreateFromDefinition(definition, root);
 
@@ -54,7 +58,8 @@ public class DialectGenerator : ISourceGenerator
                 catch (Exception e)
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
-                        new DiagnosticDescriptor("mavlink01", "Exception", "Exception thrown: {0}", "category", DiagnosticSeverity.Error, true),
+                        new DiagnosticDescriptor("mavlink01", "Exception", "Exception thrown: {0}", "category",
+                            DiagnosticSeverity.Error, true),
                         root.Symbol.Locations.First(), e
                     ));
                 }
