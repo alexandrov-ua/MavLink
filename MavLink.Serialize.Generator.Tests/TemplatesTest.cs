@@ -75,7 +75,9 @@ public class TemplatesTest
                         new EnumItemRenderModel(4, "MAV_MODE_FLAG_AUTO_ENABLED", "Reserved for future use"),
                     }),
             },
-            new List<string>());
+            new List<string>(),
+             "test", 
+            []);
 
         var text = TemplateHelper.RenderTemplate(model);
 
@@ -95,7 +97,9 @@ public class TemplatesTest
             {
                 "standard.xml",
                 "minimal.xml"
-            });
+            },
+            "test",
+            []);
 
         var text = TemplateHelper.RenderTemplate(model);
 

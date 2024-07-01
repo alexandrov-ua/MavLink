@@ -22,6 +22,11 @@ internal class SyntaxReceiver : ISyntaxContextReceiver
             var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
             var attributeData = classSymbol?.GetAttributes()
                 .FirstOrDefault(ad => ad.AttributeClass?.ToDisplayString() == "MavLink.Serialize.Dialects.DialectAttribute" /*typeof(DialectAttribute).FullName*/);
+            var dependencies = classSymbol?.GetAttributes()
+                .Where(ad =>
+                    ad.AttributeClass?.ContainingNamespace.ToDisplayString() == "MavLink.Serialize.Dialects" && ad.AttributeClass.Name == "DialectDependencyAttribute")
+                .Select(t => t.AttributeClass.TypeArguments.First())
+                .Select(t => t.Name).ToArray();
             var filePath = attributeData?.ConstructorArguments.FirstOrDefault().Value as string;
             var sourceFilePath = context.SemanticModel.SyntaxTree.FilePath;
             Roots.Add(new ClassNodeInfo(
@@ -29,13 +34,14 @@ internal class SyntaxReceiver : ISyntaxContextReceiver
                 classSymbol?.ContainingNamespace?.ToString() ?? "",
                 filePath ?? "",
                 sourceFilePath,
-                classSymbol
+                classSymbol,
+                dependencies
                 ));
 
         }
     } 
 }
 
-public record class ClassNodeInfo(string DisplayName, string NameSpace, string FileName, string SourceFilePath, ISymbol Symbol)
+public record class ClassNodeInfo(string DisplayName, string NameSpace, string FileName, string SourceFilePath, ISymbol Symbol, string[] DependencyClassNames)
 {
 }

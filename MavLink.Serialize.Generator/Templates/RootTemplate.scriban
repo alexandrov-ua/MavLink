@@ -8,25 +8,31 @@ namespace {{ Namespace }};
 
 public partial class {{ ClassName }} : IDialect
 {
-    {{~ if AnyIncludes ~}}
-    public static IDialect Create({{- IncludesParameters -}})
-    {
-        var list = new List<IDialect>();
-        {{~ for include in Includes ~}}
-        list.Add({{- include | string.replace "." "" -}});
-        {{~ end ~}}
-        return new {{ ClassName }}(new CompositeDialect(list));
-    }
-    
-    public {{ ClassName }}(IDialect include)
-    {
-        _include = include;
-    }
-    
-    private IDialect _include;
-    {{~ else ~}}    
-    public static IDialect Create() => new {{ ClassName }}();
+    {{~ for include in Includes ~}}
+    private IDialect _{{~ include | string.replace "." "" ~}};
     {{~ end ~}}
+    public static IDialect Create(
+    {{- for include in Includes -}}
+    IDialect {{ include | string.replace "." "" -}}
+    {{- if !for.last -}},{{- end -}}
+    {{- end -}})
+    {
+        var dialect = new {{ ClassName }}();
+        {{~ for include in Includes ~}}
+        dialect._{{~ include | string.replace "." "" }} = {{ include | string.replace "." "" ~}};
+        {{~ end ~}}
+        return dialect;
+    }
+  
+    
+    public static IDialect Default = {{ ClassName }}.Create(
+    {{- for dep in DialectDependencies -}}
+    {{- dep -}}.Default
+    {{- if !for.last -}},{{- end -}}
+    {{- end -}}
+    );
+    
+    public string Name => "{{ DialectName }}";
 
     public IPocket<IPayload>? CreatePocket(uint messageId, bool isMavlinkV2, byte sequenceNumber,
         byte systemId, byte componentId, ReadOnlySpan<byte> payload)
@@ -36,11 +42,9 @@ public partial class {{ ClassName }} : IDialect
             {{~ for message in Messages ~}}
             {{ message.Id }} => new {{ to_pascal_case message.Name }}Pocket(isMavlinkV2, sequenceNumber, systemId, componentId, {{ to_pascal_case message.Name }}Payload.Deserialize(payload)),
             {{~ end ~}}
-            {{~ if AnyIncludes ~}}
-            _ => _include.CreatePocket(messageId, isMavlinkV2, sequenceNumber, systemId, componentId, payload),
-            {{~ else ~}}
-            _ => null
-            {{~ end ~}}
+            _ => {{ for include in Includes -}}
+                 _{{- include | string.replace "." "" -}}.CreatePocket(messageId, isMavlinkV2, sequenceNumber, systemId, componentId, payload)
+                 ?? {{ end -}}null
         };
     }
     {{~ for enum in HiddenEnums ~}}

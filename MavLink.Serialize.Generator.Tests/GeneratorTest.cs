@@ -53,6 +53,7 @@ public class DialectGeneratorTest
              }
              
              [Dialect("common.xml")]
+             [DialectDependency<MinimalDialect>()]
              public partial class CommonDialect
              {
                  
@@ -79,12 +80,14 @@ public class DialectGeneratorTest
              }
 
              [Dialect("common.xml")]
+             [DialectDependency<MinimalDialect>]
              public partial class CommonDialect
              {
                  
              }
              
              [Dialect("cubepilot.xml")]
+             [DialectDependency<CommonDialect>]
              public partial class CubepilotDialect
              {
                  

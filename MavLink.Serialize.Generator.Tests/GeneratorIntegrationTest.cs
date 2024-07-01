@@ -10,16 +10,19 @@ public partial class MyMinimalDialect
 }
 
 [Dialect("standard.xml")]
+[DialectDependency<MyMinimalDialect>]
 public partial class MyStandardDialect
 {
 }
 
 [Dialect("common.xml")]
+[DialectDependency<MyStandardDialect>]
 public partial class MyCommonDialect
 {
 }
 
 [Dialect("ASLUAV.xml")]
+[DialectDependency<MyCommonDialect>]
 public partial class MyAsluavDialect
 {
 }

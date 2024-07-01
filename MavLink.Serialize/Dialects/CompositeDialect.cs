@@ -3,6 +3,7 @@ using MavLink.Serialize.Messages;
 
 namespace MavLink.Serialize.Dialects;
 
+
 public class CompositeDialect : IDialect
 {
     private readonly IReadOnlyCollection<IDialect> _dialectsCollection;
@@ -11,7 +12,9 @@ public class CompositeDialect : IDialect
     {
         _dialectsCollection = dialectsCollection;
     }
-    
+
+    public string Name => "composite";
+
     public IPocket<IPayload>? CreatePocket(uint messageId, bool isMavlinkV2, byte sequenceNumber, byte systemId, byte componentId,
         ReadOnlySpan<byte> payload)
     {

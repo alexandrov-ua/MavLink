@@ -5,6 +5,8 @@ namespace MavLink.Serialize.Tests.Dialects;
 
 public class TestDialect : IDialect
 {
+
+    public string Name => "test";
     public static IDialect Default { get; } = new TestDialect();
 
     public IPocket<IPayload>? CreatePocket(uint messageId, bool isMavlinkV2, byte sequenceNumber,

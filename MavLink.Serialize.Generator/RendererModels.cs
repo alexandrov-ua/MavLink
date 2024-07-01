@@ -9,17 +9,17 @@ public record RootRenderModel(
     string ClassName,
     List<MessageRenderModel> Messages,
     List<EnumRenderModel> Enums,
-    List<string> Includes)
+    List<string> Includes,
+    string DialectName,
+    string[] DialectDependencies)
 {
     public bool AnyIncludes => Includes.Any();
-    public string IncludesParameters => string.Join(", ", Includes.Select(t => $"IDialect {t.Replace(".","")}"));
-
     public bool AnyHiddenEnums => HiddenEnums.Any();
 
     public IEnumerable<EnumRenderModel> GlobalEnums => Enums.Where(t => t.Name != "MAV_CMD");
     public IEnumerable<EnumRenderModel> HiddenEnums => Enums.Where(t => t.Name == "MAV_CMD");
-    
-    
+
+
     public static RootRenderModel CreateFromDefinition(RootDefinition rootDefinition, ClassNodeInfo classNodeInfo)
     {
         return new RootRenderModel(
@@ -27,7 +27,9 @@ public record RootRenderModel(
             classNodeInfo.DisplayName,
             rootDefinition.Messages.Select(t => MessageRenderModel.CreateFromDefinition(t)).ToList(),
             rootDefinition.Enums.Select(t => EnumRenderModel.CreateFromDefinition(t)).ToList(),
-            rootDefinition.Includes
+            rootDefinition.Includes,
+            classNodeInfo.FileName,
+            classNodeInfo.DependencyClassNames
         );
     }
 }

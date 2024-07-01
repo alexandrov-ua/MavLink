@@ -8,30 +8,31 @@ public partial class MinimalDialect
 }
 
 [Dialect("standard.xml")]
+[DialectDependency<MinimalDialect>]
 public partial class StandardDialect
 {
 }
 
 [Dialect("common.xml")]
+[DialectDependency<StandardDialect>]
 public partial class CommonDialect
 {
-    public static readonly IDialect Default = CommonDialect.Create(StandardDialect.Create(MinimalDialect.Create()));
 }
 
 
 
 [Dialect("ardupilotmega.xml")]
+[DialectDependency<UAvionixDialect>]
+[DialectDependency<IcarousDialect>]
+[DialectDependency<CubepilotDialect>]
+[DialectDependency<CsAirLinkDialect>]
+[DialectDependency<CommonDialect>]
 public partial class ArduPilotMegaDialect
 {
-    public static readonly IDialect Default =
-        ArduPilotMegaDialect.Create(CommonDialect.Default,
-            UAvionixDialect.Create(CommonDialect.Default),
-            IcarousDialect.Create(), 
-            CubepilotDialect.Create(CommonDialect.Default), 
-            CsAirLinkDialect.Create());
 }
 
 [Dialect("uAvionix.xml")]
+[DialectDependency<CommonDialect>]
 public partial class UAvionixDialect
 {
 }
@@ -42,6 +43,7 @@ public partial class IcarousDialect
 }
 
 [Dialect("cubepilot.xml")]
+[DialectDependency<CommonDialect>]
 public partial class CubepilotDialect
 {
 }
