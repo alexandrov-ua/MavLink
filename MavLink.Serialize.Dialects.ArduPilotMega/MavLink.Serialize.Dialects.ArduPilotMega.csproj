@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="ardupilotmega.xml" />
+      <AdditionalFiles Include="csAirLink.xml" />
+      <AdditionalFiles Include="cubepilot.xml" />
+      <AdditionalFiles Include="icarous.xml" />
+      <AdditionalFiles Include="uAvionix.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MavLink.Serialize.Dialects.Common\MavLink.Serialize.Dialects.Common.csproj" />
+      <ProjectReference Include="..\MavLink.Serialize.Generator\MavLink.Serialize.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
+      <ProjectReference Include="..\MavLink.Serialize\MavLink.Serialize.csproj" />
+    </ItemGroup>
+
+</Project>

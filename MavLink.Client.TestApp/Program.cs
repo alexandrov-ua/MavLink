@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Linq;
 using MavLink.Client;
-using MavLink.Client.TestApp.Dialects;
+using MavLink.Serialize.Dialects.ArduPilotMega;
 
 
 using var client =

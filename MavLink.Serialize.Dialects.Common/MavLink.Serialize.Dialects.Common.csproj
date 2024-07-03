@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MavLink.Serialize\MavLink.Serialize.csproj" />
+        <ProjectReference Include="..\MavLink.Serialize.Generator\MavLink.Serialize.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="common.xml" />
+      <AdditionalFiles Include="minimal.xml" />
+      <AdditionalFiles Include="standard.xml" />
+    </ItemGroup>
+    
+</Project>

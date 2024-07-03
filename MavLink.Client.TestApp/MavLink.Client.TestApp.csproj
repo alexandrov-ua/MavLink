@@ -9,27 +9,20 @@
 
     <ItemGroup>
         <ProjectReference Include="..\MavLink.Client\MavLink.Client.csproj"/>
+        <ProjectReference Include="..\MavLink.Serialize.Dialects.ArduPilotMega\MavLink.Serialize.Dialects.ArduPilotMega.csproj" />
         <ProjectReference Include="..\MavLink.Serialize\MavLink.Serialize.csproj" />
         <ProjectReference Include="..\MavLink.Serialize.Generator\MavLink.Serialize.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true"/>
     </ItemGroup>
 
     <ItemGroup>
         <None Remove="Dialects\ardupilotmega.xml"/>
-        <AdditionalFiles Include="Dialects\ardupilotmega.xml"/>
         <None Remove="Dialects\common.xml"/>
-        <AdditionalFiles Include="Dialects\common.xml"/>
         <None Remove="Dialects\csAirLink.xml"/>
-        <AdditionalFiles Include="Dialects\csAirLink.xml"/>
         <None Remove="Dialects\cubepilot.xml"/>
-        <AdditionalFiles Include="Dialects\cubepilot.xml"/>
         <None Remove="Dialects\icarous.xml"/>
-        <AdditionalFiles Include="Dialects\icarous.xml"/>
         <None Remove="Dialects\minimal.xml"/>
-        <AdditionalFiles Include="Dialects\minimal.xml"/>
         <None Remove="Dialects\standard.xml"/>
-        <AdditionalFiles Include="Dialects\standard.xml"/>
         <None Remove="Dialects\uAvionix.xml"/>
-        <AdditionalFiles Include="Dialects\uAvionix.xml"/>
     </ItemGroup>
 
 </Project>

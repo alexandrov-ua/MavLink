@@ -77,7 +77,7 @@ public class TemplatesTest
             },
             new List<string>(),
              "test", 
-            [], new List<CommandRendererModel>());
+            [],[], new List<CommandRendererModel>());
 
         var text = TemplateHelper.RenderTemplate(model);
 
@@ -99,7 +99,7 @@ public class TemplatesTest
                 "minimal.xml"
             },
             "test",
-            [], new List<CommandRendererModel>());
+            [], [],new List<CommandRendererModel>());
 
         var text = TemplateHelper.RenderTemplate(model);
 

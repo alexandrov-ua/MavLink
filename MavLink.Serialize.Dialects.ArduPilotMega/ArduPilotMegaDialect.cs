@@ -1,25 +1,6 @@
-using MavLink.Serialize.Dialects;
+﻿using MavLink.Serialize.Dialects.Common;
 
-namespace MavLink.Client.DemoApp.Dialects;
-
-[Dialect("minimal.xml")]
-public partial class MinimalDialect
-{
-}
-
-[Dialect("standard.xml")]
-[DialectDependency<MinimalDialect>]
-public partial class StandardDialect
-{
-}
-
-[Dialect("common.xml")]
-[DialectDependency<StandardDialect>]
-public partial class CommonDialect
-{
-}
-
-
+namespace MavLink.Serialize.Dialects.ArduPilotMega;
 
 [Dialect("ardupilotmega.xml")]
 [DialectDependency<UAvionixDialect>]

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using MavLink.Client.DemoApp.Dialects;
 using MavLink.Client.DemoApp.ViewModels;
+using MavLink.Serialize.Dialects.ArduPilotMega;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MavLink.Client.DemoApp;

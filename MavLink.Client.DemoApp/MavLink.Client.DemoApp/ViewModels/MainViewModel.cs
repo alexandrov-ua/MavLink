@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using MavLink.Client.DemoApp.Dialects;
+using MavLink.Serialize.Dialects.Common;
 using ReactiveUI;
 
 namespace MavLink.Client.DemoApp.ViewModels;

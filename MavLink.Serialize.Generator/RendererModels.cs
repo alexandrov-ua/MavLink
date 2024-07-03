@@ -13,6 +13,7 @@ public record RootRenderModel(
     List<string> Includes,
     string DialectName,
     string[] DialectDependencies,
+    string[] Usings,
     List<CommandRendererModel> Commands)
 {
     public bool AnyIncludes => Includes.Any();
@@ -25,13 +26,14 @@ public record RootRenderModel(
     public static RootRenderModel CreateFromDefinition(RootDefinition rootDefinition, ClassNodeInfo classNodeInfo)
     {
         return new RootRenderModel(
-            classNodeInfo.NameSpace,
+            classNodeInfo.Namespace,
             classNodeInfo.DisplayName,
             rootDefinition.Messages.Select(t => MessageRenderModel.CreateFromDefinition(t)).ToList(),
             rootDefinition.Enums.Select(t => EnumRenderModel.CreateFromDefinition(t)).ToList(),
             rootDefinition.Includes,
             classNodeInfo.FileName,
             classNodeInfo.DependencyClassNames,
+            classNodeInfo.DependencyNamespaces.Distinct().Where(t=>t != classNodeInfo.Namespace).ToArray(),
             rootDefinition.Enums.Where(t => t.Name == "MAV_CMD").SelectMany(t => t.Items)
                 .Select(t => CommandRendererModel.CreateFromDefinition("MavCmd", classNodeInfo.DisplayName, t))
                 .ToList()
@@ -196,7 +198,8 @@ public record CommandParameterRendererModel(
     string Enum,
     bool Reserved)
 {
-    public bool IsEmpty => Value.Trim(new char[] {' ', '.'}).ToLower() == "empty" || Reserved == true || Value.Trim(new char[] {' ', '.'}).ToLower().StartsWith("reserved");
+    public bool IsEmpty => Value.Trim(new char[] {' ', '.'}).ToLower() == "empty" || Reserved == true ||
+                           Value.Trim(new char[] {' ', '.'}).ToLower().StartsWith("reserved");
 
     public string ParameterName => !string.IsNullOrEmpty(Label)
         ? Label.ToCamelCaseIdentifier()

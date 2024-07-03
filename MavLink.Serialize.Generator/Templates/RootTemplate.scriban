@@ -3,6 +3,9 @@ using MavLink.Serialize;
 using MavLink.Serialize.Dialects;
 using MavLink.Serialize.Messages;
 using System.Collections.Generic;
+{{~ for using in Usings ~}}
+using {{ using }};
+{{~ end ~}}
 
 namespace {{ Namespace }};
 

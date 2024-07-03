@@ -18,15 +18,19 @@ internal class SyntaxReceiver : ISyntaxContextReceiver
                 .Any(al => al.Attributes
                     .Any(a => a.Name.ToString() == "Dialect")))
         {
-            
             var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
             var attributeData = classSymbol?.GetAttributes()
-                .FirstOrDefault(ad => ad.AttributeClass?.ToDisplayString() == "MavLink.Serialize.Dialects.DialectAttribute" /*typeof(DialectAttribute).FullName*/);
-            var dependencies = classSymbol?.GetAttributes()
+                .FirstOrDefault(
+                    ad => ad.AttributeClass?.ToDisplayString() ==
+                          "MavLink.Serialize.Dialects.DialectAttribute" /*typeof(DialectAttribute).FullName*/);
+            var dependenciesSymbols = classSymbol?.GetAttributes()
                 .Where(ad =>
-                    ad.AttributeClass?.ContainingNamespace.ToDisplayString() == "MavLink.Serialize.Dialects" && ad.AttributeClass.Name == "DialectDependencyAttribute")
-                .Select(t => t.AttributeClass.TypeArguments.First())
-                .Select(t => t.Name).ToArray();
+                    ad.AttributeClass?.ContainingNamespace.ToDisplayString() == "MavLink.Serialize.Dialects" &&
+                    ad.AttributeClass.Name == "DialectDependencyAttribute")
+                .Select(t => t.AttributeClass.TypeArguments.First()).ToList();
+
+            var dependencies = dependenciesSymbols.Select(t => t.Name).ToArray();
+            var dependencieNamespaces = dependenciesSymbols.Select(t => t.ContainingNamespace.ToString()).ToArray();
             var filePath = attributeData?.ConstructorArguments.FirstOrDefault().Value as string;
             var sourceFilePath = context.SemanticModel.SyntaxTree.FilePath;
             Roots.Add(new ClassNodeInfo(
@@ -35,13 +39,21 @@ internal class SyntaxReceiver : ISyntaxContextReceiver
                 filePath ?? "",
                 sourceFilePath,
                 classSymbol,
-                dependencies
-                ));
-
+                dependencies,
+                dependencieNamespaces
+            ));
         }
-    } 
+    }
 }
 
-public record class ClassNodeInfo(string DisplayName, string NameSpace, string FileName, string SourceFilePath, ISymbol Symbol, string[] DependencyClassNames)
+public record class ClassNodeInfo(
+    string DisplayName,
+    string Namespace,
+    string FileName,
+    string SourceFilePath,
+    ISymbol Symbol,
+    string[] DependencyClassNames,
+    string[] DependencyNamespaces
+    )
 {
 }

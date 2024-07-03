@@ -18,6 +18,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Client.DemoApp.Desk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Serialize.Generator", "MavLink.Serialize.Generator\MavLink.Serialize.Generator.csproj", "{B46E0924-DC10-4B9B-8711-472A6BB1F032}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Serialize.Dialects.Common", "MavLink.Serialize.Dialects.Common\MavLink.Serialize.Dialects.Common.csproj", "{B09426A6-E0D0-433F-8906-70C753B767F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Serialize.Dialects.ArduPilotMega", "MavLink.Serialize.Dialects.ArduPilotMega\MavLink.Serialize.Dialects.ArduPilotMega.csproj", "{487778BC-96EF-42CC-ABBC-AC2106AE755A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +64,13 @@ Global
 		{B46E0924-DC10-4B9B-8711-472A6BB1F032}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B46E0924-DC10-4B9B-8711-472A6BB1F032}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B46E0924-DC10-4B9B-8711-472A6BB1F032}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B09426A6-E0D0-433F-8906-70C753B767F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B09426A6-E0D0-433F-8906-70C753B767F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B09426A6-E0D0-433F-8906-70C753B767F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B09426A6-E0D0-433F-8906-70C753B767F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{487778BC-96EF-42CC-ABBC-AC2106AE755A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{487778BC-96EF-42CC-ABBC-AC2106AE755A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{487778BC-96EF-42CC-ABBC-AC2106AE755A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{487778BC-96EF-42CC-ABBC-AC2106AE755A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
