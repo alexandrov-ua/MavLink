@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
+//TODO: refactor
 namespace MavLink.Serialize.Generator;
 
 public record RootRenderModel(
@@ -11,7 +12,8 @@ public record RootRenderModel(
     List<EnumRenderModel> Enums,
     List<string> Includes,
     string DialectName,
-    string[] DialectDependencies)
+    string[] DialectDependencies,
+    List<CommandRendererModel> Commands)
 {
     public bool AnyIncludes => Includes.Any();
     public bool AnyHiddenEnums => HiddenEnums.Any();
@@ -29,12 +31,20 @@ public record RootRenderModel(
             rootDefinition.Enums.Select(t => EnumRenderModel.CreateFromDefinition(t)).ToList(),
             rootDefinition.Includes,
             classNodeInfo.FileName,
-            classNodeInfo.DependencyClassNames
+            classNodeInfo.DependencyClassNames,
+            rootDefinition.Enums.Where(t => t.Name == "MAV_CMD").SelectMany(t => t.Items)
+                .Select(t => CommandRendererModel.CreateFromDefinition("MavCmd", classNodeInfo.DisplayName, t))
+                .ToList()
         );
     }
 }
 
-public record MessageRenderModel(string Name, int Id, string Description, List<MessageItemRenderModel> Items, int? ExtensionIndex)
+public record MessageRenderModel(
+    string Name,
+    int Id,
+    string Description,
+    List<MessageItemRenderModel> Items,
+    int? ExtensionIndex)
 {
     public int Size => Items.Select(t => t.Type.ActualSize).Sum();
 
@@ -85,7 +95,7 @@ public record MessageItemRenderModel(string Name, TypeRenderModel Type, string D
     public static MessageItemRenderModel CreateFromDefinition(MessageItemDefinition messageItemDefinition)
     {
         return new MessageItemRenderModel(messageItemDefinition.Name,
-            TypeRenderModel.CreateFromType(messageItemDefinition.Type, messageItemDefinition.Enum), 
+            TypeRenderModel.CreateFromType(messageItemDefinition.Type, messageItemDefinition.Enum),
             messageItemDefinition.Description);
     }
 }
@@ -152,4 +162,50 @@ public record class EnumRenderModel(string Name, string Description, bool IsBitm
 
 public record class EnumItemRenderModel(uint Index, string Name, string Description)
 {
+}
+
+public record CommandRendererModel(
+    string SourceEnum,
+    string SourceClass,
+    string EnumValue,
+    string Description,
+    List<CommandParameterRendererModel> Parameters)
+{
+    public string FullEnumValueName => $"{SourceClass}.{SourceEnum}.{EnumValue}";
+
+    public IEnumerable<CommandParameterRendererModel> NotEmptyParameters => Parameters.Where(t => !t.IsEmpty);
+
+    public static CommandRendererModel CreateFromDefinition(string enumName, string className, EnumItemDefinition item)
+    {
+        var model = new CommandRendererModel(SourceEnum: enumName,
+            SourceClass: className,
+            item.Name,
+            item.Description,
+            item.Params.Select(t =>
+                new CommandParameterRendererModel(t.Index, t.Value, t.Label, t.Units, t.Enum, t.Reserved)).ToList()
+        );
+        return model;
+    }
+}
+
+public record CommandParameterRendererModel(
+    int Index,
+    string Value,
+    string Label,
+    string Units,
+    string Enum,
+    bool Reserved)
+{
+    public bool IsEmpty => Value.Trim(new char[] {' ', '.'}).ToLower() == "empty" || Reserved == true || Value.Trim(new char[] {' ', '.'}).ToLower().StartsWith("reserved");
+
+    public string ParameterName => !string.IsNullOrEmpty(Label)
+        ? Label.ToCamelCaseIdentifier()
+            .EscapeKeywords()
+        : "param" + Index;
+
+    public string Type => IsEnum
+        ? Enum.ToPascalCaseIdentifier()
+        : "float";
+
+    public bool IsEnum => !string.IsNullOrEmpty(Enum);
 }

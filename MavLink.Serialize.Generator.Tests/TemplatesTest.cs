@@ -6,7 +6,7 @@ using Scriban.Runtime;
 using Xunit.Abstractions;
 
 namespace MavLink.Serialize.Generator.Tests;
-
+//TODO: refactor
 public class TemplatesTest
 {
     private readonly ITestOutputHelper _testOutputHelper;
@@ -77,7 +77,7 @@ public class TemplatesTest
             },
             new List<string>(),
              "test", 
-            []);
+            [], new List<CommandRendererModel>());
 
         var text = TemplateHelper.RenderTemplate(model);
 
@@ -99,7 +99,7 @@ public class TemplatesTest
                 "minimal.xml"
             },
             "test",
-            []);
+            [], new List<CommandRendererModel>());
 
         var text = TemplateHelper.RenderTemplate(model);
 

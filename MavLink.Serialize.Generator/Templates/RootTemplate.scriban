@@ -170,3 +170,41 @@ public class {{ messageName }}Payload : IPayload<{{ messageName }}Payload>, IPay
 {{~ end ~}}
 
 #endregion
+
+#region Commands
+
+public static class {{ ClassName }}CommandProviderExtensions
+{
+    {{~ for command in Commands ~}}
+    /// <summary>
+    /// {{ string.strip_newlines command.Description }}
+    /// </summary>
+    /// <param name="commandProvider"></param>
+    {{~ for parameter in command.NotEmptyParameters ~}}
+    /// <param name="{{ parameter.ParameterName }}"> {{ string.strip_newlines parameter.Value }}</param>
+    {{~ end ~}}
+    public static IPocket<T> Create{{ to_pascal_case command.EnumValue }}<T>(this ICommandProvider<T> commandProvider 
+        {{- for parameter in command.NotEmptyParameters -}}
+        ,{{- parameter.Type }} {{ parameter.ParameterName -}}
+        {{- end -}}
+        ) 
+        where T: IPayload
+    {
+        return commandProvider.Create((uint){{ command.FullEnumValueName }}, (t) => t switch
+        {
+            {{~ for parameter in command.Parameters ~}}
+            {{~ if parameter.IsEmpty ~}}
+            {{ parameter.Index }} => 0f,
+            {{~ else if parameter.IsEnum ~}}
+            {{ parameter.Index }} => (float){{ parameter.ParameterName }},
+            {{~ else ~}}
+            {{ parameter.Index }} => {{ parameter.ParameterName }},
+            {{~ end ~}}
+            {{~ end ~}}
+            _ => 0f
+        });
+    }
+    {{~ end ~}}
+}
+
+#endregion
