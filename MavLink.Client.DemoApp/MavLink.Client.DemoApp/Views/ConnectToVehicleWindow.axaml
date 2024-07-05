@@ -1,0 +1,50 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:MavLink.Client.DemoApp.ViewModels"
+        xmlns:reactiveUi="http://reactiveui.net"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MavLink.Client.DemoApp.Views.ConnectToVehicleWindow"
+        Title="ConnectToVehicleWindow"
+        Width="800"
+        Height="450"
+        WindowStartupLocation="CenterOwner"
+        x:DataType="viewModels:ConnectToVehicleViewModel">
+    <Grid RowDefinitions="Auto, *">
+        <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
+            <TextBlock>Connection string:</TextBlock>
+            <TextBox Width="200" Text="{Binding ConnectionString}" IsEnabled="{Binding !IsConnected}"></TextBox>
+            <Button Command="{Binding DoConnect}" IsVisible="{Binding !IsConnected}">Connect</Button>
+            <Button Command="{Binding DoReconnect}" IsVisible="{Binding IsConnected}">Reconnect</Button>
+        </StackPanel>
+        <TextBlock Grid.Row="1" IsVisible="{Binding IsLoading}" VerticalAlignment="Center" HorizontalAlignment="Center">Waiting for HEARTBEAT messages...</TextBlock>
+        <ListBox Grid.Row="1" ItemsSource="{Binding AvailableVehicles^}" IsVisible="{Binding !IsLoading}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="300, *">
+                        <StackPanel>
+                            <TextBlock Text="{Binding VehicleType}"></TextBlock>
+                            <TextBlock Text="{Binding AutopilotName}"></TextBlock>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}System Id: {0} Component Id: {1}">
+                                        <Binding Path="SystemId"></Binding>
+                                        <Binding Path="ComponentId"></Binding>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </StackPanel>
+                        <Panel Grid.Column="1">
+                            <Button VerticalAlignment="Center" HorizontalAlignment="Left" 
+                                    Command="{Binding $parent[ListBox].((viewModels:ConnectToVehicleViewModel)DataContext).SelectVehicle}"
+                                    CommandParameter="{Binding .}">
+                                Select
+                            </Button>
+                        </Panel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

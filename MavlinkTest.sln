@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Serialize.Dialects.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Serialize.Dialects.ArduPilotMega", "MavLink.Serialize.Dialects.ArduPilotMega\MavLink.Serialize.Dialects.ArduPilotMega.csproj", "{487778BC-96EF-42CC-ABBC-AC2106AE755A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MavLink.Client.CommonVehicle", "MavLink.Client.CommonVehicle\MavLink.Client.CommonVehicle.csproj", "{B32F2E82-6FA5-45C8-B03E-C8DF477553C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +74,9 @@ Global
 		{487778BC-96EF-42CC-ABBC-AC2106AE755A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{487778BC-96EF-42CC-ABBC-AC2106AE755A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{487778BC-96EF-42CC-ABBC-AC2106AE755A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B32F2E82-6FA5-45C8-B03E-C8DF477553C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B32F2E82-6FA5-45C8-B03E-C8DF477553C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B32F2E82-6FA5-45C8-B03E-C8DF477553C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B32F2E82-6FA5-45C8-B03E-C8DF477553C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

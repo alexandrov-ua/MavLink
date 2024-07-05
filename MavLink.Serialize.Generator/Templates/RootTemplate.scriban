@@ -186,12 +186,12 @@ public static class {{ ClassName }}CommandProviderExtensions
     {{~ for parameter in command.NotEmptyParameters ~}}
     /// <param name="{{ parameter.ParameterName }}"> {{ string.strip_newlines parameter.Value }}</param>
     {{~ end ~}}
-    public static IPocket<T> Create{{ to_pascal_case command.EnumValue }}<T>(this ICommandProvider<T> commandProvider 
+    public static T Create{{ to_pascal_case command.EnumValue }}<T>(this ICommandProvider<T> commandProvider 
         {{- for parameter in command.NotEmptyParameters -}}
         ,{{- parameter.Type }} {{ parameter.ParameterName -}}
         {{- end -}}
         ) 
-        where T: IPayload
+        where T: IPocket<IPayload>
     {
         return commandProvider.Create((uint){{ command.FullEnumValueName }}, (t) => t switch
         {

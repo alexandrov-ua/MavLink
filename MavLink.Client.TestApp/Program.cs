@@ -16,7 +16,6 @@ using var _ = client.GroupBy(t => t.MessageName)
         Console.Clear();
         Console.WriteLine(
             $"{"MessageName",-35}{"Version", -10}{"MsgId",-10}{"Count(3s)",-10}{"Frequency",-20}");
-        Console.WriteLine("====================================");
         foreach (var i in t.GroupBy(z => z.Value.MessageName)
                      .Select(z => new
                      {

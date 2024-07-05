@@ -23,28 +23,16 @@ public partial class App : Application, IDisposable
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var collection = new ServiceCollection();
-            collection.AddCommonServices(desktop?.Args ?? []);
-            _services = collection.BuildServiceProvider();
-            var vm = _services.GetRequiredService<MainViewModel>()!;
             desktop.MainWindow = new MainWindow
             {
-                DataContext = vm
-            };
-            desktop.Exit += (sender, args) =>
-            {
-                _services.Dispose();
+                DataContext = new MainViewModel()
             };
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            var collection = new ServiceCollection();
-            collection.AddCommonServices([]);
-            _services = collection.BuildServiceProvider();
-            var vm = _services.GetRequiredService<MainViewModel>()!;
             singleViewPlatform.MainView = new MainView
             {
-                DataContext = vm,
+                DataContext = new MainViewModel(),
             };
         }
 

@@ -7,12 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\MavLink.Client\MavLink.Client.csproj" />
       <ProjectReference Include="..\MavLink.Serialize.Dialects.Common\MavLink.Serialize.Dialects.Common.csproj" />
-      <ProjectReference Include="..\MavLink.Serialize\MavLink.Serialize.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="System.Reactive" Version="6.0.1" />
     </ItemGroup>
 
 </Project>

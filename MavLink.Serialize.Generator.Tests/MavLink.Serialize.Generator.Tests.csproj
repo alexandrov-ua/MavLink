@@ -24,6 +24,8 @@
 
 
     <ItemGroup>
+        <ProjectReference Include="..\MavLink.Client.CommonVehicle\MavLink.Client.CommonVehicle.csproj" />
+        <ProjectReference Include="..\MavLink.Client\MavLink.Client.csproj" />
         <ProjectReference Include="..\MavLink.Serialize.Tests\MavLink.Serialize.Tests.csproj" />
         <ProjectReference Include="..\MavLink.Serialize\MavLink.Serialize.csproj" />
         <ProjectReference Include="..\MavLink.Serialize.Generator\MavLink.Serialize.Generator.csproj"

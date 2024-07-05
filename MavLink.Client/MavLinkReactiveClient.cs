@@ -2,11 +2,21 @@ using System.Collections.Concurrent;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
+using MavLink.Serialize.Dialects.Common;
 using MavLink.Serialize.Messages;
 
 namespace MavLink.Client;
 
-public class MavLinkReactiveClient : IObservable<IPocket<IPayload>>, IDisposable
+public interface IMavLinkReactiveClient : IObservable<IPocket<IPayload>>, IDisposable
+{
+    Task<TResponse> SendWithResponse<TRequest, TResponse>(TRequest request,
+        Func<TRequest, TResponse, bool> predicate)
+        where TRequest : IPocket<IPayload>
+        where TResponse : IPocket<IPayload>;
+}
+
+public class MavLinkReactiveClient : IMavLinkReactiveClient
 {
     private readonly IMavLinkClient _mavLinkClient;
     private readonly IObservable<IPocket<IPayload>> _receivedEvents;
@@ -39,6 +49,7 @@ public class MavLinkReactiveClient : IObservable<IPocket<IPayload>>, IDisposable
                     {
                         _mavLinkClient.Send(pocketToSend);
                     }
+
                     r();
                 }
                 catch (Exception e)
@@ -49,6 +60,22 @@ public class MavLinkReactiveClient : IObservable<IPocket<IPayload>>, IDisposable
         });
     }
 
+    public async Task<TResponse> SendWithResponse<TRequest, TResponse>(TRequest request,
+        Func<TRequest, TResponse, bool> predicate)
+        where TRequest : IPocket<IPayload>
+        where TResponse : IPocket<IPayload>
+    {
+        var response = this.OfType<TResponse>()
+            .Where(t => predicate(request, t))
+            .FirstAsync()
+            .ToTask();
+        await _mavLinkClient.Send(request);
+        return await response;
+    }
+
+ 
+
+    
     public IDisposable Subscribe(IObserver<IPocket<IPayload>> observer)
     {
         return _receivedEvents.Subscribe(observer);
