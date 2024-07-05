@@ -15,10 +15,13 @@ public partial class MainView : ReactiveUserControl<MainViewModel>
     public MainView()
     {
         InitializeComponent();
-        this.WhenActivated((Action<IDisposable> action) => 
-            action(ViewModel!.ConnectToVehicleDialog.RegisterHandler(DoShowDialogAsync)));
-        this.WhenActivated((Action<IDisposable> action) => 
-            action(Observable.FromAsync(ViewModel!.ShowDialog, RxApp.MainThreadScheduler).Publish().Connect()));
+        if (!Design.IsDesignMode)
+        {
+            this.WhenActivated((Action<IDisposable> action) => 
+                action(ViewModel!.ConnectToVehicleDialog.RegisterHandler(DoShowDialogAsync)));
+            this.WhenActivated((Action<IDisposable> action) => 
+                action(Observable.FromAsync(ViewModel!.ShowDialog, RxApp.MainThreadScheduler).Publish().Connect()));            
+        }
     }
     
     private async Task DoShowDialogAsync(InteractionContext<IVehicleMultiplexer, IVehicle?> interaction)

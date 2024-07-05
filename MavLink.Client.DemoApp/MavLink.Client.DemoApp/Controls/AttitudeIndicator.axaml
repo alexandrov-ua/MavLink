@@ -1,0 +1,244 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:MavLink.Client.DemoApp.ViewModels"
+             xmlns:controls="clr-namespace:MavLink.Client.DemoApp.Controls"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200"
+             x:Name="AltIndicator"
+             x:Class="MavLink.Client.DemoApp.Controls.AttitudeIndicator" RollAngle="0.0" PitchAngle="0"
+             VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <Viewbox VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Canvas Width="100" Height="100">
+            <Image Width="200" Height="200">
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <RotateTransform CenterX="0" CenterY="0" Angle="{Binding #AltIndicator.RollAngle, Converter={x:Static controls:MyConverters.RollAngleConverter }}"></RotateTransform>
+                        <TranslateTransform X="-50" Y="{Binding #AltIndicator.PitchAngle, Converter={x:Static controls:MyConverters.PitchAngleConverter }}"></TranslateTransform>
+                    </TransformGroup>
+                </Image.RenderTransform>
+                <Image.Source>
+                    <DrawingImage>
+                        <DrawingImage.Drawing>
+                            <DrawingGroup>
+                                <DrawingGroup>
+                                    <GeometryDrawing Brush="Chocolate">
+                                        <RectangleGeometry Rect="0,100,200,100"></RectangleGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing Brush="DodgerBlue">
+                                        <RectangleGeometry Rect="0,0,200,100"></RectangleGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="0,100" EndPoint="200,100"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <!-- up !-->
+
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,30" EndPoint="115,30"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,35" EndPoint="105,35"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,40" EndPoint="115,40"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,45" EndPoint="105,45"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,50" EndPoint="115,50"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,55" EndPoint="105,55"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,60" EndPoint="115,60"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,65" EndPoint="105,65"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,70" EndPoint="115,70"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,75" EndPoint="105,75"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,80" EndPoint="115,80"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,85" EndPoint="105,85"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,90" EndPoint="115,90"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,95" EndPoint="105,95"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <!-- down !-->
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,105" EndPoint="105,105"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,110" EndPoint="115,110"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,115" EndPoint="105,115"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,120" EndPoint="115,120"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,125" EndPoint="105,125"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,130" EndPoint="115,130"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,135" EndPoint="105,135"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,140" EndPoint="115,140"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,145" EndPoint="105,145"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,150" EndPoint="115,150"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,155" EndPoint="105,155"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,160" EndPoint="115,160"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="95,165" EndPoint="105,165"></LineGeometry>
+                                    </GeometryDrawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="White" Thickness="0.5"></Pen>
+                                        </GeometryDrawing.Pen>
+                                        <LineGeometry StartPoint="85,170" EndPoint="115,170"></LineGeometry>
+                                    </GeometryDrawing>
+                                </DrawingGroup>
+                            </DrawingGroup>
+                        </DrawingImage.Drawing>
+                    </DrawingImage>
+                </Image.Source>
+            </Image>
+            <Path Fill="Black" Stroke="Gray" StrokeThickness="2">
+                <Path.Data>
+                    <CombinedGeometry>
+                        <CombinedGeometry.Geometry1>
+                            <CombinedGeometry GeometryCombineMode="Exclude">
+                                <CombinedGeometry.Geometry1>
+                                    <RectangleGeometry Rect="0,0,100,100"></RectangleGeometry>
+                                </CombinedGeometry.Geometry1>
+                                <CombinedGeometry.Geometry2>
+                                    <EllipseGeometry RadiusX="45" RadiusY="45" Center="50,50" />
+                                </CombinedGeometry.Geometry2>
+                            </CombinedGeometry>
+                        </CombinedGeometry.Geometry1>
+                        <CombinedGeometry.Geometry2>
+                        </CombinedGeometry.Geometry2>
+                    </CombinedGeometry>
+                </Path.Data>
+            </Path>
+            <Path Fill="Black" Stroke="Black" StrokeThickness="1">
+                <Path.Data>
+                    <GeometryGroup>
+                        <LineGeometry StartPoint="31,45" EndPoint="40,50"></LineGeometry>
+                        <LineGeometry StartPoint="31,55" EndPoint="40,50"></LineGeometry>
+                        <LineGeometry StartPoint="69,55" EndPoint="60,50"></LineGeometry>
+                        <LineGeometry StartPoint="69,45" EndPoint="60,50"></LineGeometry>
+                    </GeometryGroup>
+                </Path.Data>
+            </Path>
+        </Canvas>
+    </Viewbox>
+</UserControl>

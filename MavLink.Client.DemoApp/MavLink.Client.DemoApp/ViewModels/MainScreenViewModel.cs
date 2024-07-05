@@ -12,7 +12,7 @@ namespace MavLink.Client.DemoApp.ViewModels;
 
 public class MainScreenViewModel : ViewModelBase, IActivatableViewModel
 {
-    private VehiclePosition _position;
+    
     private readonly IVehicle _vehicle;
     private readonly Func<Task> _showVehicleDialogCallback;
 
@@ -32,16 +32,29 @@ public class MainScreenViewModel : ViewModelBase, IActivatableViewModel
                     payload.Alt / 1000d,
                     payload.Hdg / 100d);
             }).DisposeWith(disposable);
+
+            _vehicle.OfType<AttitudePocket>().Subscribe(t =>
+            {
+                Attitude = new VehicleAttitude(t.Payload.Roll * 180 / Math.PI,
+                    t.Payload.Pitch * 180 / Math.PI,
+                    t.Payload.Yaw * 180 / Math.PI);
+            }).DisposeWith(disposable);
         });
 
         ExecuteCommand = ReactiveCommand.CreateFromTask(MyCommand);
         ExecuteCommand.ThrownExceptions.Subscribe(exception => Console.WriteLine(exception.ToString()));
     }
-
+    private VehiclePosition _position;
     public VehiclePosition Position
     {
         get => _position;
         set => this.RaiseAndSetIfChanged(ref _position, value);
+    }
+    private VehicleAttitude _attitude;
+    public VehicleAttitude Attitude
+    {
+        get => _attitude;
+        set => this.RaiseAndSetIfChanged(ref _attitude, value);
     }
 
     public ReactiveCommand<Unit,Unit> ExecuteCommand { get; set; }
@@ -61,3 +74,5 @@ public class MainScreenViewModel : ViewModelBase, IActivatableViewModel
 
     public ViewModelActivator Activator { get; } = new ViewModelActivator();
 }
+
+public record VehicleAttitude(double Roll, double Pitch, double Yaw);

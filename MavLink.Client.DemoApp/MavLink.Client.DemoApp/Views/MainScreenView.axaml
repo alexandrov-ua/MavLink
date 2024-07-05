@@ -8,16 +8,21 @@
              x:Class="MavLink.Client.DemoApp.Views.MainScreenView"
              x:DataType="viewModels:MainScreenViewModel">
     <Design.DataContext>
-        <viewModels:MainScreenViewModel/>
+        <viewModels:MainScreenViewModel>
+            <x:Arguments>
+                <viewModels:StubVehicle />
+                <x:Null></x:Null>
+            </x:Arguments>
+        </viewModels:MainScreenViewModel>
     </Design.DataContext>
     <Grid RowDefinitions="*, auto">
         <controls:Map Grid.Row="0" Center="{Binding Position}">
-        
+
         </controls:Map>
         <Grid Grid.Row="0">
             <StackPanel Height="100" Width="120" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="20">
                 <StackPanel.Background>
-                    <SolidColorBrush Opacity="0.7" Color="Gray"/>
+                    <SolidColorBrush Opacity="0.7" Color="Gray" />
                 </StackPanel.Background>
                 <TextBlock Text="{Binding Position.Altitude,  StringFormat={} Altitude: {0}}"></TextBlock>
                 <TextBlock Text="{Binding Position.Longitude, StringFormat={} Longitude:{0}}"></TextBlock>
@@ -25,6 +30,11 @@
                 <TextBlock Text="{Binding Position.Rotation,  StringFormat={} Rotation: {0}}"></TextBlock>
                 <TextBlock></TextBlock>
                 <TextBlock></TextBlock>
+            </StackPanel>
+            <StackPanel Height="200" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,140,20,0"
+                   Opacity="1">
+                <controls:AttitudeIndicator RollAngle="{Binding Attitude.Roll}" PitchAngle="{Binding Attitude.Pitch}" />
+                <controls:HeadingIndicator YawAngle="{Binding Attitude.Yaw}" Background="White" />
             </StackPanel>
         </Grid>
         <StackPanel Grid.Row="1" Orientation="Horizontal">

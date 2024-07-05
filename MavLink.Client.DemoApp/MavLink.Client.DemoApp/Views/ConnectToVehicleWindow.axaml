@@ -11,6 +11,13 @@
         Height="450"
         WindowStartupLocation="CenterOwner"
         x:DataType="viewModels:ConnectToVehicleViewModel">
+    <Design.DataContext>
+        <viewModels:ConnectToVehicleViewModel>
+            <x:Arguments>
+                <x:Null></x:Null>
+            </x:Arguments>
+        </viewModels:ConnectToVehicleViewModel>
+    </Design.DataContext>
     <Grid RowDefinitions="Auto, *">
         <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
             <TextBlock>Connection string:</TextBlock>

@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MavLink.Client.DemoApp.Controls.HeadingIndicator" x:Name="HeadingInd" YawAngle="0"
+             VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White">
+    <Viewbox VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Canvas Height="100" Width="100">
+            <Path Fill="Black" Stroke="Gray" StrokeThickness="1" Canvas.Top="24" Canvas.Left="26.5">
+                <Path.RenderTransform>
+                    <RotateTransform Angle="{Binding #HeadingInd.YawAngle}" CenterX="2" CenterY="2"></RotateTransform>
+                </Path.RenderTransform>
+                <Path.Data>
+                    M26.602,24.568l15.401,6.072l-0.389-4.902c-10.271-7.182-9.066-6.481-14.984-10.615V2.681 c0-1.809-1.604-2.701-3.191-2.681c-1.587-0.021-3.19,0.872-3.19,2.681v12.44c-5.918,4.134-4.714,3.434-14.985,10.615l-0.39,4.903 l15.401-6.072c0,0-0.042,15.343-0.006,15.581l-5.511,3.771v2.957l7.044-2.427h3.271l7.046,2.427V43.92l-5.513-3.771 C26.644,39.909,26.602,24.568,26.602,24.568z
+                </Path.Data>
+            </Path>
+            <Path Fill="Black" Stroke="Gray" StrokeThickness="2">
+                <Path.Data>
+                    <CombinedGeometry>
+                        <CombinedGeometry.Geometry1>
+                            <CombinedGeometry GeometryCombineMode="Exclude">
+                                <CombinedGeometry.Geometry1>
+                                    <RectangleGeometry Rect="0,0,100,100"></RectangleGeometry>
+                                </CombinedGeometry.Geometry1>
+                                <CombinedGeometry.Geometry2>
+                                    <EllipseGeometry RadiusX="45" RadiusY="45" Center="50,50" />
+                                </CombinedGeometry.Geometry2>
+                            </CombinedGeometry>
+                        </CombinedGeometry.Geometry1>
+                        <CombinedGeometry.Geometry2>
+                        </CombinedGeometry.Geometry2>
+                    </CombinedGeometry>
+                </Path.Data>
+            </Path>
+            <TextBlock Canvas.Top="7" Canvas.Left="46" FontSize="8">N</TextBlock>
+            <TextBlock Canvas.Top="84.5" Canvas.Left="46" FontSize="8">S</TextBlock>
+            <TextBlock Canvas.Top="46" Canvas.Left="7" FontSize="8">W</TextBlock>
+            <TextBlock Canvas.Top="46" Canvas.Left="85.5" FontSize="8">E</TextBlock>
+        </Canvas>
+    </Viewbox>
+</UserControl>
