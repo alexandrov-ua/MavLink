@@ -18,12 +18,12 @@ This repo contains:
    - Enums - `DONE`
    - Messages - `DONE`
      - Units - `TO DO`
-   - Commands - `TO DO`
-   - Dependencies between dialects - `IN PROGRESS`
+   - Commands - `IN PROGRESS`
+   - Dependencies between dialects - `DONE`
  - Client - `IN PROGRESS`
    - ReactiveClient - `IN PROGRESS`
    - MavLink's microservices - `TO DO`
-   - Vehicle abstraction - `TO DO`
+   - Vehicle abstraction - `IN PROGRESS`
  - Publish as NuGet - `TO DO`
 
 ## Documentation
@@ -46,6 +46,23 @@ using var _ = client
         Console.WriteLine($"{p.MessageName}, {p.MessageId}");
         Console.WriteLine($"{p.Payload.Alt}");
     });
+```
+
+**Creating a vehicle:**
+
+```CSharp
+var multiplexer = new VehicleMultiplexer();
+multiplexer.Connect("udp://0.0.0.0:14550", ArduPilotMegaDialect.Default);
+multiplexer.ConnectToVehicle(await multiplexer.AvailableVehicles.Select(t=>t.First()).FirstAsync());
+var vehicle = multiplexer.CurrentVehicle;
+```
+
+**Sending commands:**
+
+```CSharp
+await vehicle.SendCommand(t => t.CreateMavCmdDoSetMode((MavMode)1, 4, 0));
+await vehicle.SendCommand(t => t.CreateMavCmdComponentArmDisarm(1,0));
+await vehicle.SendCommand(t => t.CreateMavCmdNavTakeoff(0, 0, 0, 0, 10));
 ```
 
 **Messages generation (Dialect generation):**
