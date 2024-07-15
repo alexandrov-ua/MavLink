@@ -14,6 +14,7 @@ This repo contains:
    - MavLink V2 - `DONE`
    - MavLink V1 backwark compatibility - `DONE`
    - Signing - `TO DO`
+   - Return serialization errors - `TO DO`
  - Model generator
    - Enums - `DONE`
    - Messages - `DONE`
@@ -24,6 +25,8 @@ This repo contains:
    - ReactiveClient - `IN PROGRESS`
    - MavLink's microservices - `TO DO`
    - Vehicle abstraction - `IN PROGRESS`
+   - Transport - UDP - `DONE`
+   - Transport - Serial, TCP - `TO DO`
  - Publish as NuGet - `TO DO`
 
 ## Documentation
