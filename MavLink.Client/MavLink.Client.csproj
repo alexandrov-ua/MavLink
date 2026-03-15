@@ -1,18 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\MavLink.Serialize.Dialects.Common\MavLink.Serialize.Dialects.Common.csproj" />
-      <ProjectReference Include="..\MavLink.Serialize\MavLink.Serialize.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="System.Reactive" Version="6.0.1" />
-    </ItemGroup>
-
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MavLink.Serialize.Dialects.Common\MavLink.Serialize.Dialects.Common.csproj" />
+    <ProjectReference Include="..\MavLink.Serialize\MavLink.Serialize.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.IO.Ports" Version="10.0.5" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+  </ItemGroup>
 </Project>

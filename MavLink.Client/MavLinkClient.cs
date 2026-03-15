@@ -14,9 +14,21 @@ public class MavLinkClient : IMavLinkClient
 
     public static IMavLinkClient Create(string connectionString, IDialect dialect)
     {
-        //TODO: handle connection string to choose appropriate transport
-        var hostAndPort = connectionString.Replace("udp://", "");
-        return new MavLinkClient(new UdpTransport(IPEndPoint.Parse(hostAndPort)), dialect);
+        if (connectionString.StartsWith("udp://"))
+        {
+            var hostAndPort = connectionString.Replace("udp://", "");
+            return new MavLinkClient(new UdpTransport(IPEndPoint.Parse(hostAndPort)), dialect);
+        }
+        else if (connectionString.StartsWith("serial://"))
+        {
+            var devAndBaud = connectionString.Replace("serial://", "").Split(":");
+            return new MavLinkClient(new SerialTransport(devAndBaud[0], int.Parse(devAndBaud[1])), dialect);
+        }
+        else
+        {
+            throw new InvalidProgramException("Connection string contains ambiguous schema. Use something like udp://127.0.0.1:14550");
+        }
+
     }
 
     public MavLinkClient(IMavLinkTransport transport, IDialect dialect)
@@ -27,9 +39,10 @@ public class MavLinkClient : IMavLinkClient
 
     public IPocket<IPayload> Receive()
     {
-        Span<byte> buffer = stackalloc byte[300];
+        Span<byte> buffer = stackalloc byte[500];
         var read = _transport.Receive(buffer);
-        return MavlinkSerialize.Deserialize(buffer.Slice(0, read), _dialect);
+        var t = MavlinkSerialize.Deserialize(buffer.Slice(0, read), _dialect);
+        return t;
     }
 
     public async Task Send(IPocket<IPayload> pocket)

@@ -1,14 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\MavLink.Client\MavLink.Client.csproj" />
-      <ProjectReference Include="..\MavLink.Serialize.Dialects.Common\MavLink.Serialize.Dialects.Common.csproj" />
-    </ItemGroup>
-
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MavLink.Client\MavLink.Client.csproj" />
+    <ProjectReference Include="..\MavLink.Serialize.Dialects.Common\MavLink.Serialize.Dialects.Common.csproj" />
+  </ItemGroup>
 </Project>

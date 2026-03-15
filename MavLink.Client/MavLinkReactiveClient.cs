@@ -29,6 +29,7 @@ public class MavLinkReactiveClient : IMavLinkReactiveClient
         _scheduler = new EventLoopScheduler();
         _mavLinkClient = mavLinkClient;
         var messages = ReceiveMessages()
+            .Retry()
             .SubscribeOn(_scheduler)
             .Publish();
         _receivedEvents = messages;
@@ -37,25 +38,37 @@ public class MavLinkReactiveClient : IMavLinkReactiveClient
 
     private IObservable<IPocket<IPayload>> ReceiveMessages()
     {
-        return Observable.Create<IPocket<IPayload>>(o =>
+        return Observable.Create<IPocket<IPayload>>(observer =>
         {
-            return _scheduler.Schedule(r =>
+            var cts = new CancellationTokenSource();
+
+            var task = Task.Run(() =>
             {
                 try
                 {
-                    var pocket = _mavLinkClient.Receive();
-                    o.OnNext(pocket);
-                    if (_pocketsToSend.TryDequeue(out var pocketToSend))
+                    while (!cts.Token.IsCancellationRequested)
                     {
-                        _mavLinkClient.Send(pocketToSend);
+                        var message = _mavLinkClient.Receive();
+                        if (message is null)
+                            continue;
+                        observer.OnNext(message);
                     }
-
-                    r();
                 }
-                catch (Exception e)
+                catch (OperationCanceledException)
                 {
-                    o.OnError(e);
+                    // normal shutdown
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"ERROR!!!, {ex}");
+                    observer.OnError(ex);
+                }
+            }, cts.Token);
+
+            return Disposable.Create(() =>
+            {
+                cts.Cancel();
+                cts.Dispose();
             });
         });
     }
@@ -73,9 +86,16 @@ public class MavLinkReactiveClient : IMavLinkReactiveClient
         return await response;
     }
 
- 
+    public async Task Send<TRequest>(TRequest request)
+        where TRequest : IPocket<IPayload>
+    {
+        await _mavLinkClient.Send(request);
+    }
 
-    
+
+
+
+
     public IDisposable Subscribe(IObserver<IPocket<IPayload>> observer)
     {
         return _receivedEvents.Subscribe(observer);
